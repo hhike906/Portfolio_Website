@@ -135,7 +135,7 @@
   .deck:hover .back1 { transform: rotate(-11deg) translate(-38px, 10px); }
   .deck:hover .back2 { transform: rotate(10deg) translate(40px, 4px); }
   .deck .front { overflow: hidden; transform-style: preserve-3d; box-shadow: 10px 10px 0 var(--accent); }
-  .deck .front img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+  .deck .front img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 80%; display: block; pointer-events: none; }
   .deck .glare { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at var(--gx, 30%) var(--gy, 20%), #ffffff55, transparent 45%); mix-blend-mode: overlay; }
   .loupe { position: absolute; width: 150px; height: 150px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px var(--accent), 0 12px 30px #0008; pointer-events: none; opacity: 0; transform: translate(-50%, -50%) scale(.6); transition: opacity .2s, transform .25s cubic-bezier(.2,.8,.2,1); background-repeat: no-repeat; z-index: 3; }
   .deck.lens .loupe { opacity: 1; transform: translate(-50%, -50%) scale(1); }

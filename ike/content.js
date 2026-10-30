@@ -15,15 +15,21 @@ window.IKE = {
   // cover = the image people play with; shots = everything that opens when they click it.
   featured: {
     title: "Red Orchid Vine",
-    note: "Fine line + red.",
-    cover: "../images/ike/tattoo-02.jpg",
+    note: "Fine line + red, across the lower back.",
+    cover: "../images/ike/tattoo-01.jpg",
     shots: [
-      { img: "../images/ike/tattoo-02.jpg", caption: "Red Orchid Vine — fine line" },
-      { img: "../images/ike/tattoo-03.jpg", caption: "Red Orchid Vine — flow" },
-      { img: "../images/ike/tattoo-01.jpg", caption: "Lower back — full span" },
-      { img: "../images/ike/fire-02.jpg", caption: "Fire, mural wall" },
-      { img: "../images/ike/fire-01.jpg", caption: "Fire I" },
-      { img: "../images/ike/fire-03.jpg", caption: "Fire III" }
+      { img: "../images/ike/tattoo-01.jpg", caption: "Red Orchid Vine" },
+      { img: "../images/ike/tattoo-09.jpg", caption: "The vine, up close" },
+      { img: "../images/ike/tattoo-02.jpg", caption: "Full span" },
+      { img: "../images/ike/tattoo-03.jpg", caption: "Settled in" },
+      { img: "../images/ike/tattoo-04.jpg", caption: "Standing" },
+      { img: "../images/ike/tattoo-05.jpg", caption: "Kneeling" },
+      { img: "../images/ike/tattoo-06.jpg", caption: "Back view" },
+      { img: "../images/ike/tattoo-07.jpg", caption: "Over the shoulder" },
+      { img: "../images/ike/tattoo-08.jpg", caption: "Side light" },
+      { img: "../images/ike/tattoo-10.jpg", caption: "Line and shadow" },
+      { img: "../images/ike/tattoo-11.jpg", caption: "Low light" },
+      { img: "../images/ike/tattoo-12.jpg", caption: "Final" }
     ]
   },
 
