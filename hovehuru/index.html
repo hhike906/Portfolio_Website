@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hove Huru — The House</title>
+<meta name="description" content="Hove Huru — a Zimbabwe-rooted luxury house. Hand-braided copper bracelets, furniture and metalwork.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+<style>
+  :root {
+    --bg: #0a0806; --fg: #ece2d0; --muted: #9a8c78;
+    --line: #2a221a; --line-strong: #4a3a2a;
+    --accent: #c98b4f; --accent-fg: #0a0806; --copper: #c98b4f;
+    --ph-a: #15110d; --ph-b: #1b1610;
+    --bar-bg: #0a0806e6;
+    --font-body: "Jost", system-ui, sans-serif;
+    --font-display: "Cormorant Garamond", Georgia, serif;
+  }
+  .brand { font-size: 1.25rem; letter-spacing: .28em; text-transform: uppercase; font-weight: 600; color: var(--copper); }
+  .eyebrow { font-size: .72rem; letter-spacing: .32em; text-transform: uppercase; color: var(--muted); }
+
+  .hero { min-height: 78vh; display: grid; place-items: center; text-align: center; position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+  .hero::before { content: ""; position: absolute; inset: auto 50% -40% auto; transform: translateX(50%); width: 900px; height: 900px; border-radius: 50%; background: radial-gradient(circle, #b8733326, transparent 62%); }
+  .hero .inner { position: relative; padding: 80px 16px; }
+  .hero h1 { font-size: clamp(3.2rem, 11vw, 8rem); font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--copper); margin: 18px 0 12px; }
+  .hero blockquote { font-family: var(--font-display); font-style: italic; font-size: clamp(1.2rem, 2.4vw, 1.6rem); max-width: 36ch; margin: 0 auto 32px; color: var(--fg); }
+  .rule { width: 64px; height: 1px; background: var(--copper); margin: 0 auto; }
+
+  section.block { padding: 88px 0 0; }
+  .head { text-align: center; margin-bottom: 40px; }
+  .head h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 500; letter-spacing: .04em; }
+
+  /* Featured */
+  .feature { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+  .feature .ph, .feature .media { --ratio: 1 / 1; }
+  .feature h3 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 500; }
+  .feature .price { font-size: 1.1rem; color: var(--copper); margin-bottom: 20px; }
+
+  /* Shop */
+  .filters { display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 24px; margin-bottom: 36px; }
+  .filters button { background: none; border: 0; border-bottom: 1px solid transparent; color: var(--muted); padding: 8px 2px; min-height: 40px; cursor: pointer; font-size: .78rem; letter-spacing: .22em; text-transform: uppercase; }
+  .filters button[aria-pressed="true"] { color: var(--fg); border-bottom-color: var(--copper); }
+  .shop { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 40px 28px; }
+  .item .ph, .item .media { --ratio: 4 / 5; }
+  .item .info { padding-top: 16px; }
+  .item h3 { font-size: 1.45rem; font-weight: 500; margin: 4px 0 6px; }
+  .item .clan { font-size: .7rem; letter-spacing: .24em; text-transform: uppercase; color: var(--copper); min-height: 1em; }
+  .item p { font-size: .92rem; color: var(--muted); margin-bottom: 14px; }
+  .item .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .item .price { font-size: .95rem; }
+  .badge { font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line-strong); padding: 3px 8px; }
+  .item .btn { padding: 10px 16px; font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; }
+
+  /* Clans */
+  .clans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .clan-card { background: var(--bg); padding: 32px 28px; }
+  .clan-card .n { font-family: var(--font-display); font-size: 1.1rem; color: var(--copper); }
+  .clan-card h3 { font-size: 1.6rem; font-weight: 500; margin: 6px 0 4px; }
+  .clan-card .animal { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; min-height: 1em; }
+  .clan-card p { margin: 0; }
+
+  .craft { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .craft .ph, .craft .media { --ratio: 4 / 5; }
+  .craft p { font-size: 1.05rem; }
+
+  /* Inquiry dialog */
+  dialog { background: #120e0a; color: var(--fg); border: 1px solid var(--line-strong); padding: 0; width: min(480px, 100% - 32px); }
+  dialog::backdrop { background: #000c; }
+  dialog form { padding: 28px; display: grid; gap: 14px; }
+  dialog h3 { font-size: 1.8rem; font-weight: 500; margin: 0; }
+  label { display: grid; gap: 6px; font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  input, textarea { background: transparent; border: 1px solid var(--line-strong); color: var(--fg); padding: 12px; min-height: 44px; font-size: 1rem; letter-spacing: normal; text-transform: none; }
+  textarea { min-height: 100px; resize: vertical; }
+  .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .note { font-size: .85rem; color: var(--muted); }
+
+  @media (max-width: 860px) {
+    .feature, .craft { grid-template-columns: 1fr; gap: 28px; }
+    .clans { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="./">Hove Huru</a>
+      <nav class="nav">
+        <a href="#shop">Shop</a>
+        <a href="#orders">The Orders</a>
+        <a href="#craft">Craft</a>
+        <a class="back-home" href="../">← All sites</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="inner">
+        <p class="eyebrow">A Zimbabwe-rooted luxury house</p>
+        <h1>Hove Huru</h1>
+        <blockquote>Not a brand. A house — of six orders, of objects made to be inherited.</blockquote>
+        <a class="btn" href="#shop">Enter the shop</a>
+      </div>
+    </section>
+
+    <section class="block" id="featured">
+      <div class="wrap feature" id="featureSlot"></div>
+    </section>
+
+    <section class="block" id="shop">
+      <div class="wrap">
+        <div class="head"><p class="eyebrow">The collection</p><h2>Shop</h2></div>
+        <div class="filters" role="group" aria-label="Filter products">
+          <button type="button" data-f="All" aria-pressed="true">All</button>
+          <button type="button" data-f="Bracelets" aria-pressed="false">Bracelets</button>
+          <button type="button" data-f="Rings" aria-pressed="false">Rings</button>
+          <button type="button" data-f="Furniture" aria-pressed="false">Furniture</button>
+          <button type="button" data-f="Metalwork" aria-pressed="false">Metalwork</button>
+          <button type="button" data-f="Textiles" aria-pressed="false">Textiles</button>
+        </div>
+        <div class="shop" id="shopGrid"></div>
+      </div>
+    </section>
+
+    <section class="block" id="orders">
+      <div class="wrap">
+        <div class="head"><p class="eyebrow">The mythology</p><h2>The Six Orders</h2><p class="note" style="max-width:52ch;margin:0 auto">Every piece belongs to an order. Every owner chooses one.</p></div>
+        <div class="clans" id="clans"></div>
+      </div>
+    </section>
+
+    <section class="block" id="craft">
+      <div class="wrap craft">
+        <div class="ph" role="img" aria-label="Workshop">Workshop photo</div>
+        <div>
+          <p class="eyebrow">The workshop</p>
+          <h2 style="font-size:clamp(2rem,4vw,2.8rem);font-weight:500">Made by one pair of hands.</h2>
+          <p>Every Hove Huru piece is cut, braided, welded and finished by the founder in Wichita, Kansas — an industrial engineer and fabricator by training.</p>
+          <p>We make few things, slowly, so each one can outlast its owner.</p>
+          <a class="btn ghost" href="#" data-inquire="Custom commission">Commission a piece</a>
+          <p style="margin-top:20px"><a data-ig="hovehuru" href="#" target="_blank" rel="noopener"></a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <span>© <span data-year></span> Hove Huru LLC</span>
+      <a data-email href="#"></a>
+    </div>
+  </footer>
+
+  <dialog id="inquiry">
+    <form id="inqForm">
+      <p class="eyebrow" style="margin:0">Inquiry</p>
+      <h3 id="inqTitle">Request this piece</h3>
+      <label>Name<input name="name" required autocomplete="name"></label>
+      <label>Email<input name="email" type="email" required autocomplete="email"></label>
+      <label>Message<textarea name="message" placeholder="Wrist size, timeline, questions…"></textarea></label>
+      <input type="hidden" name="product">
+      <p class="note" id="inqStatus" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn ghost" id="inqClose">Close</button>
+        <button type="submit" class="btn">Send</button>
+      </div>
+    </form>
+  </dialog>
+
+<script src="../assets/config.js"></script>
+<script src="../assets/site.js"></script>
+<script src="products.js"></script>
+<script>
+  (function () {
+    const products = window.PRODUCTS || [];
+    const STATUS = { "available": "", "made-to-order": "Made to order", "coming-soon": "Coming soon", "sold-out": "Sold out" };
+
+    const priceText = p => p.price != null ? "$" + Number(p.price).toLocaleString() : "Price on request";
+
+    function action(p) {
+      if (p.status === "sold-out") return `<span class="badge">Sold out</span>`;
+      if (p.status === "coming-soon") return `<button class="btn ghost" data-inquire="${escapeHTML(p.name)}" data-waitlist="1">Join waitlist</button>`;
+      if (p.status === "available" && p.buyLink) return `<a class="btn" href="${escapeHTML(p.buyLink)}" target="_blank" rel="noopener">Buy now</a>`;
+      return `<button class="btn ghost" data-inquire="${escapeHTML(p.name)}">${p.status === "made-to-order" ? "Commission" : "Request"}</button>`;
+    }
+
+    function item(p) {
+      return `<article class="item" data-cat="${escapeHTML(p.category)}">
+        ${mediaHTML(p.img, p.name, "Product photo")}
+        <div class="info">
+          <div class="clan">${escapeHTML(p.clan || "")}</div>
+          <h3>${escapeHTML(p.name)}</h3>
+          <p>${escapeHTML(p.description || "")}</p>
+          <div class="row">
+            <span class="price">${p.status === "coming-soon" ? `<span class="badge">Coming soon</span>` : priceText(p)}</span>
+            ${action(p)}
+          </div>
+        </div>
+      </article>`;
+    }
+
+    const grid = document.getElementById("shopGrid");
+    function render(f) { grid.innerHTML = products.filter(p => f === "All" || p.category === f).map(item).join(""); }
+    document.querySelectorAll(".filters button").forEach(b => b.addEventListener("click", () => {
+      document.querySelectorAll(".filters button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      render(b.dataset.f);
+    }));
+    render("All");
+
+    const f = products.find(p => p.featured);
+    if (f) {
+      document.getElementById("featureSlot").innerHTML = `
+        ${mediaHTML(f.img, f.name, "Featured piece")}
+        <div>
+          <p class="eyebrow">${escapeHTML(f.clan || "Featured")} · ${escapeHTML(f.edition || "")}</p>
+          <h3>${escapeHTML(f.name)}</h3>
+          <p>${escapeHTML(f.description)}</p>
+          <p class="price">${priceText(f)}</p>
+          ${action(f)}
+        </div>`;
+    } else {
+      document.getElementById("featured").remove();
+    }
+
+    document.getElementById("clans").innerHTML = (window.CLANS || []).map((c, i) => `
+      <div class="clan-card">
+        <div class="n">${["I","II","III","IV","V","VI"][i] || ""}</div>
+        <h3>${escapeHTML(c.name)}</h3>
+        <div class="animal">${escapeHTML(c.animal || "")}</div>
+        <p>${escapeHTML(c.role)}</p>
+      </div>`).join("");
+
+    // Inquiry dialog
+    const dlg = document.getElementById("inquiry");
+    const form = document.getElementById("inqForm");
+    const status = document.getElementById("inqStatus");
+    document.addEventListener("click", e => {
+      const t = e.target.closest("[data-inquire]");
+      if (!t) return;
+      e.preventDefault();
+      form.reset(); status.textContent = "";
+      form.elements.namedItem("product").value = t.dataset.inquire;
+      document.getElementById("inqTitle").textContent = (t.dataset.waitlist ? "Waitlist — " : "") + t.dataset.inquire;
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+    });
+    document.getElementById("inqClose").addEventListener("click", () => dlg.close());
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      data.source = "Hove Huru shop";
+      status.textContent = "Sending…";
+      const ok = await submitLead(data);
+      if (ok) { status.textContent = "Received. You'll hear from the house within 48 hours."; form.reset(); return; }
+      // Fallback: open the visitor's email app with the inquiry prefilled
+      const cfg = window.SITE_CONFIG || {};
+      const body = `Name: ${data.name}%0D%0AEmail: ${data.email}%0D%0A%0D%0A${encodeURIComponent(data.message || "")}`;
+      location.href = `mailto:${cfg.email}?subject=${encodeURIComponent("Hove Huru inquiry — " + data.product)}&body=${body}`;
+      status.textContent = "Opening your email app to send this…";
+    });
+  })();
+</script>
+</body>
+</html>

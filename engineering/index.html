@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engineering Portfolio — Tanatswa Mafume</title>
+<meta name="description" content="Industrial engineering portfolio of Tanatswa Mafume: process improvement, quality, ergonomics, composites and fabrication.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="eng.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="./">Tanatswa Mafume <span class="mono">/ IE</span></a>
+      <nav class="nav">
+        <a href="./" aria-current="page">Projects</a>
+        <a href="about.html">About</a>
+        <a href="about.html#contact">Contact</a>
+        <a class="back-home" href="../">← All sites</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="mono">Industrial Engineering · Wichita State University</p>
+        <h1>I find the bottleneck, then I build the fix.</h1>
+        <p class="lede">Industrial engineer with hands-on manufacturing experience — aerospace composites at NIAR, process improvement on a live production line, and a fabrication background in welding, CNC and water-jet.</p>
+        <div class="cta">
+          <a class="btn" href="#projects">See the work</a>
+          <a class="btn ghost" href="about.html">About me</a>
+          <a class="btn ghost" data-resume="../" href="#">Download resume</a>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><b>B.S. Industrial Eng.</b><span>Expected Dec 2026</span></div>
+          <div class="stat"><b>NIAR</b><span>Composites tech since 2022</span></div>
+          <div class="stat"><b>Bosch</b><span>Senior design sponsor</span></div>
+          <div class="stat"><b>Shop-floor fluent</b><span>Weld · CNC · water-jet</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="projects">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Projects</h2>
+          <div class="filters" role="group" aria-label="Filter projects">
+            <button type="button" data-f="All" aria-pressed="true">All</button>
+            <button type="button" data-f="Work" aria-pressed="false">Work</button>
+            <button type="button" data-f="Senior Design" aria-pressed="false">Senior Design</button>
+            <button type="button" data-f="Class" aria-pressed="false">Class</button>
+            <button type="button" data-f="Fabrication" aria-pressed="false">Fabrication</button>
+          </div>
+        </div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="wrap">
+        <div class="section-head"><h2>What I bring</h2></div>
+        <div class="caps">
+          <div class="cap"><h3>Process & operations</h3><ul><li>Process mapping & bottleneck analysis</li><li>Queueing & scheduling</li><li>Waste reduction & workflow improvement</li><li>Time & cost estimation</li></ul></div>
+          <div class="cap"><h3>Quality</h3><ul><li>Statistical process control</li><li>Capability analysis</li><li>Aerospace documentation standards</li></ul></div>
+          <div class="cap"><h3>Human factors & safety</h3><ul><li>Ergonomic workstation design</li><li>Anthropometry</li><li>ACGIH lifting guidance</li></ul></div>
+          <div class="cap"><h3>Manufacturing</h3><ul><li>Composite layup</li><li>Welding & steel fabrication</li><li>CNC & water-jet</li><li>Design for manufacture</li></ul></div>
+          <div class="cap"><h3>Data & systems</h3><ul><li>Relational database design</li><li>Microsoft Access & Excel</li><li>Data validation</li></ul></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <span>© <span data-year></span> Tanatswa Mafume · Wichita, KS</span>
+      <span><a data-email href="#"></a></span>
+    </div>
+  </footer>
+
+<script src="../assets/config.js"></script>
+<script src="../assets/site.js"></script>
+<script src="projects.js"></script>
+<script>
+  (function () {
+    const grid = document.getElementById("grid");
+    const list = (window.PROJECTS || []).slice().sort((a, b) => (b.featured === true) - (a.featured === true));
+
+    function card(p) {
+      const rows = [["Problem", p.problem], ["What I did", p.approach], ["Result", p.result]]
+        .filter(([, v]) => v && v.trim())
+        .map(([k, v]) => `<dt>${k}</dt><dd>${escapeHTML(v)}</dd>`).join("");
+      return `<article class="card${p.featured ? " featured" : ""}" data-type="${escapeHTML(p.type)}">
+        ${mediaHTML(p.img, p.title, "Project photo")}
+        <div class="body">
+          <div class="meta"><span class="tag-type">${escapeHTML(p.type)}</span>${p.when ? `<span class="org">· ${escapeHTML(p.when)}</span>` : ""}</div>
+          <h3>${escapeHTML(p.title)}</h3>
+          <p class="org" style="margin:0 0 10px">${escapeHTML(p.org || "")}</p>
+          <p class="sum">${escapeHTML(p.summary || "")}</p>
+          <div class="chips">${(p.skills || []).map(s => `<span>${escapeHTML(s)}</span>`).join("")}</div>
+          ${rows ? `<details><summary>Details</summary><dl>${rows}</dl></details>` : ""}
+        </div>
+      </article>`;
+    }
+
+    function render(filter) {
+      grid.innerHTML = list.filter(p => filter === "All" || p.type === filter).map(card).join("");
+    }
+
+    document.querySelectorAll(".filters button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filters button").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+        render(btn.dataset.f);
+      });
+    });
+    render("All");
+  })();
+</script>
+</body>
+</html>

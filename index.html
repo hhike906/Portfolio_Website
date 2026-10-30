@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tanatswa Mafume</title>
+<meta name="description" content="Tanatswa Mafume — industrial engineer, founder of Hove Huru, and artist behind Ike.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@500&family=Cormorant+Garamond:wght@500;600&family=Archivo+Black&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  :root {
+    --bg: #0d0d0d; --fg: #f2efe9; --muted: #8f8a82; --line: #262626;
+    --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-display: "IBM Plex Sans", system-ui, sans-serif;
+  }
+  body { min-height: 100vh; display: flex; flex-direction: column; }
+  header.hub { padding: 40px 0 28px; }
+  header.hub .wrap { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
+  .hub h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 600; letter-spacing: -.01em; margin: 0; }
+  .hub p { margin: 0; color: var(--muted); font-family: "IBM Plex Mono", monospace; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; }
+
+  .doors { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border-block: 1px solid var(--line); }
+  .door {
+    position: relative; display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 62vh; padding: 32px; text-decoration: none; overflow: hidden;
+    transition: filter .25s ease;
+  }
+  .door:hover, .door:focus-visible { filter: brightness(1.08); }
+  .door .num { font-family: "IBM Plex Mono", monospace; font-size: .75rem; letter-spacing: .14em; opacity: .7; }
+  .door h2 { font-size: clamp(2rem, 4vw, 3.2rem); margin: 0 0 12px; }
+  .door .what { max-width: 30ch; opacity: .85; margin: 0 0 24px; }
+  .door .go { font-size: .85rem; font-weight: 600; letter-spacing: .04em; display: inline-flex; gap: 8px; align-items: center; }
+  .door .go::after { content: "→"; transition: transform .2s ease; }
+  .door:hover .go::after { transform: translateX(4px); }
+
+  .door.eng { background: #eef1f4; color: #13202c; }
+  .door.eng h2 { font-family: "IBM Plex Sans", sans-serif; font-weight: 600; letter-spacing: -.02em; }
+  .door.eng .grid-bg { position: absolute; inset: 0; background-image: linear-gradient(#13202c10 1px, transparent 1px), linear-gradient(90deg, #13202c10 1px, transparent 1px); background-size: 28px 28px; pointer-events: none; }
+
+  .door.hh { background: #0a0806; color: #e9dcc6; }
+  .door.hh h2 { font-family: "Cormorant Garamond", serif; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #c98b4f; }
+  .door.hh .glow { position: absolute; width: 380px; height: 380px; right: -120px; bottom: -120px; border-radius: 50%; background: radial-gradient(circle, #b8733340, transparent 70%); pointer-events: none; }
+
+  .door.ike { background: #f1ede6; color: #111; }
+  .door.ike h2 { font-family: "Archivo Black", sans-serif; text-transform: uppercase; font-size: clamp(2.4rem, 5vw, 4rem); letter-spacing: -.02em; }
+  .door.ike .stamp { display: inline-block; background: #d1281f; color: #fff; padding: 2px 8px; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; margin-bottom: 12px; }
+
+  .door > * { position: relative; }
+
+  @media (max-width: 860px) {
+    .doors { grid-template-columns: 1fr; }
+    .door { min-height: 40vh; padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+  <header class="hub">
+    <div class="wrap">
+      <h1>Tanatswa Mafume</h1>
+      <p>Engineer · Founder · Artist — Wichita, KS</p>
+    </div>
+  </header>
+
+  <main class="doors">
+    <a class="door eng" href="engineering/">
+      <span class="grid-bg" aria-hidden="true"></span>
+      <span class="num">01 — Engineering</span>
+      <div>
+        <h2>Industrial Engineering</h2>
+        <p class="what">Projects from class, NIAR and the shop floor. Process improvement, quality, fabrication.</p>
+        <span class="go">View portfolio</span>
+      </div>
+    </a>
+
+    <a class="door hh" href="hovehuru/">
+      <span class="glow" aria-hidden="true"></span>
+      <span class="num">02 — The House</span>
+      <div>
+        <h2>Hove Huru</h2>
+        <p class="what">A Zimbabwe-rooted luxury house. Copper bracelets, furniture and metalwork, made by hand.</p>
+        <span class="go">Enter the shop</span>
+      </div>
+    </a>
+
+    <a class="door ike" href="ike/">
+      <span class="num">03 — Art</span>
+      <div>
+        <span class="stamp">Members only</span>
+        <h2>Ike</h2>
+        <p class="what">Art, the tattoo journey, and photography from life. Free access with your email.</p>
+        <span class="go">Get access</span>
+      </div>
+    </a>
+  </main>
+
+  <footer class="footer" style="margin-top:0">
+    <div class="wrap">
+      <span>© <span data-year></span> Tanatswa Mafume</span>
+      <a data-email href="#"></a>
+    </div>
+  </footer>
+
+<script src="assets/config.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

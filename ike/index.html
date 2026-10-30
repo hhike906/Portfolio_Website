@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IKE — Art, Ink, Photography</title>
+<meta name="description" content="Ike — art, the tattoo journey, and photography. Free access with your email.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+<style>
+  :root {
+    --bg: #f1ede6; --fg: #111; --muted: #6d675f;
+    --line: #111; --line-strong: #111;
+    --accent: #d1281f; --accent-fg: #fff;
+    --ph-a: #e4dfd6; --ph-b: #ebe7df;
+    --bar-bg: #f1ede6;
+    --font-body: "Archivo", system-ui, sans-serif;
+    --font-display: "Archivo Black", Impact, sans-serif;
+    --mono: "Space Mono", ui-monospace, monospace;
+  }
+  .brand { font-size: 1.6rem; letter-spacing: -.02em; }
+  .mono { font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; }
+  .stamp { display: inline-block; background: var(--accent); color: #fff; font-family: var(--mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; padding: 3px 8px; }
+
+  /* GATE */
+  .gate { min-height: calc(100vh - 61px); display: grid; grid-template-columns: 1.2fr 1fr; border-bottom: 1px solid var(--line); }
+  .gate .left { padding: 56px 32px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--line); background: #111; color: var(--bg); position: relative; overflow: hidden; }
+  .gate .left h1 { font-size: clamp(5rem, 18vw, 14rem); line-height: .82; letter-spacing: -.04em; margin: 0; text-transform: uppercase; }
+  .gate .left p { max-width: 38ch; color: #c9c3b9; }
+  .gate .right { padding: 56px 32px; display: flex; flex-direction: column; justify-content: center; }
+  .gate h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); text-transform: uppercase; letter-spacing: -.01em; }
+  .gate form { display: grid; gap: 14px; max-width: 420px; }
+  .gate label { display: grid; gap: 6px; font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; }
+  .gate input[type=text], .gate input[type=email] { border: 2px solid var(--fg); background: transparent; padding: 12px; min-height: 48px; font-size: 1rem; border-radius: 0; }
+  .gate input:focus { outline: none; background: #fff; }
+  .check { display: flex !important; grid-template-columns: none; align-items: flex-start; gap: 10px; text-transform: none !important; letter-spacing: 0 !important; font-family: var(--font-body) !important; font-size: .9rem !important; }
+  .check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+  .gate .btn { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .04em; font-size: 1rem; min-height: 52px; }
+  .err { color: var(--accent); font-size: .85rem; min-height: 1.2em; margin: 0; }
+  .fine { font-size: .78rem; color: var(--muted); }
+
+  /* VAULT */
+  .vault[hidden] { display: none; }
+  .intro { padding: 64px 0 40px; border-bottom: 1px solid var(--line); }
+  .intro h1 { font-size: clamp(3rem, 9vw, 7rem); text-transform: uppercase; letter-spacing: -.04em; line-height: .9; margin: 0 0 20px; }
+  .intro p { font-size: 1.2rem; max-width: 52ch; }
+  .tabs { position: sticky; top: 61px; z-index: 40; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .tabs .wrap { display: flex; gap: 0; overflow-x: auto; }
+  .tabs a { font-family: var(--font-display); text-transform: uppercase; text-decoration: none; padding: 14px 18px; border-right: 1px solid var(--line); white-space: nowrap; }
+  .tabs a:first-child { border-left: 1px solid var(--line); }
+  .tabs a:hover { background: var(--fg); color: var(--bg); }
+
+  section.part { padding: 72px 0 0; }
+  .part-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; border-bottom: 3px solid var(--fg); padding-bottom: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+  .part-head h2 { font-size: clamp(2.2rem, 5vw, 3.6rem); text-transform: uppercase; letter-spacing: -.03em; margin: 0; }
+
+  .art-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .art-grid figure { margin: 0; position: relative; }
+  .art-grid .ph, .art-grid .media { --ratio: 1 / 1; }
+  .art-grid figcaption { position: absolute; left: 0; bottom: 0; background: var(--bg); padding: 6px 10px; font-family: var(--mono); font-size: .7rem; text-transform: uppercase; }
+
+  .journey { display: grid; gap: 0; }
+  .step { display: grid; grid-template-columns: 140px 1fr 280px; gap: 28px; padding: 28px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .step .n { font-family: var(--font-display); font-size: 3rem; line-height: 1; color: var(--accent); }
+  .step h3 { font-size: 1.5rem; text-transform: uppercase; margin-bottom: 8px; }
+  .step .ph, .step .media { --ratio: 4 / 3; }
+
+  .photo-grid { columns: 3 240px; column-gap: 4px; }
+  .photo-grid figure { margin: 0 0 4px; break-inside: avoid; position: relative; }
+  .photo-grid figure:nth-child(3n+1) .ph, .photo-grid figure:nth-child(3n+1) .media { --ratio: 3 / 4; }
+  .photo-grid figure:nth-child(3n+2) .ph, .photo-grid figure:nth-child(3n+2) .media { --ratio: 1 / 1; }
+  .photo-grid figure:nth-child(3n) .ph, .photo-grid figure:nth-child(3n) .media { --ratio: 4 / 5; }
+  .photo-grid figcaption { position: absolute; right: 0; bottom: 0; background: var(--fg); color: var(--bg); padding: 4px 8px; font-family: var(--mono); font-size: .68rem; text-transform: uppercase; }
+
+  .book { margin-top: 80px; background: var(--accent); color: #fff; padding: 48px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .book h2 { font-size: clamp(2rem, 5vw, 3.4rem); text-transform: uppercase; margin: 0; letter-spacing: -.02em; }
+  .book .btn { background: #111; border-color: #111; color: #fff; font-family: var(--font-display); text-transform: uppercase; }
+
+  @media (max-width: 860px) {
+    .gate { grid-template-columns: 1fr; }
+    .gate .left { min-height: 46vh; border-right: 0; border-bottom: 1px solid var(--line); padding: 40px 20px; }
+    .gate .right { padding: 40px 20px; }
+    .art-grid { grid-template-columns: repeat(2, 1fr); }
+    .step { grid-template-columns: 1fr; gap: 12px; }
+    .step .n { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="./">IKE</a>
+      <nav class="nav">
+        <a href="#art" class="vault-link" hidden>Art</a>
+        <a href="#ink" class="vault-link" hidden>Ink</a>
+        <a href="#life" class="vault-link" hidden>Life</a>
+        <a class="back-home" href="../">← All sites</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- GATE: shown until the visitor gives an email -->
+  <main class="gate" id="gate">
+    <div class="left">
+      <span class="stamp">Members only</span>
+      <h1>Ike</h1>
+      <p>Art. Ink. Photographs from the life around it. The full archive is free — it just costs you an email.</p>
+    </div>
+    <div class="right">
+      <h2>Get in.</h2>
+      <form id="gateForm" novalidate>
+        <label>First name<input type="text" name="name" autocomplete="given-name" required></label>
+        <label>Email<input type="email" name="email" autocomplete="email" required></label>
+        <label class="check"><input type="checkbox" name="adult" required> I'm 18 or older.</label>
+        <label class="check"><input type="checkbox" name="updates" checked> Send me new drops, flash days and shoot openings.</label>
+        <p class="err" id="gateErr" aria-live="polite"></p>
+        <button class="btn" type="submit">Unlock Ike</button>
+        <p class="fine">No spam. Unsubscribe any time.</p>
+      </form>
+    </div>
+  </main>
+
+  <!-- VAULT: rendered after unlock -->
+  <div class="vault" id="vault" hidden>
+    <section class="intro">
+      <div class="wrap">
+        <span class="stamp" id="welcome" style="margin-bottom:16px">Welcome</span>
+        <h1>Art.<br>Ink.<br>Life.</h1>
+        <p id="introText"></p>
+      </div>
+    </section>
+    <nav class="tabs"><div class="wrap"><a href="#art">Art</a><a href="#ink">Tattoo journey</a><a href="#life">Photography</a></div></nav>
+
+    <main class="wrap">
+      <section class="part" id="art">
+        <div class="part-head"><h2>Art</h2><span class="mono">Paintings · Drawings · Flash</span></div>
+        <div class="art-grid" id="artGrid"></div>
+      </section>
+
+      <section class="part" id="ink">
+        <div class="part-head"><h2>The Ink</h2><span class="mono">A tattoo journey</span></div>
+        <div class="journey" id="journey"></div>
+      </section>
+
+      <section class="part" id="life">
+        <div class="part-head"><h2>Life</h2><span class="mono">Street · Portrait · Lifestyle</span></div>
+        <div class="photo-grid" id="photoGrid"></div>
+      </section>
+
+      <section class="book">
+        <h2>Book ink<br>or a shoot.</h2>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+          <a class="btn" data-email href="#">Email Ike</a>
+          <a data-ig="ike" href="#" target="_blank" rel="noopener" style="color:#fff"></a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="wrap">
+      <span>© <span data-year></span> Ike</span>
+      <a href="../">All sites</a>
+    </div>
+  </footer>
+
+<script src="../assets/config.js"></script>
+<script src="../assets/site.js"></script>
+<script src="content.js"></script>
+<script>
+  (function () {
+    const KEY = "ike_access";
+    const gate = document.getElementById("gate");
+    const vault = document.getElementById("vault");
+
+    function renderVault(name) {
+      const d = window.IKE || {};
+      document.getElementById("introText").textContent = d.intro || "";
+      if (name) document.getElementById("welcome").textContent = "Welcome, " + name;
+
+      document.getElementById("artGrid").innerHTML = (d.art || []).map(a =>
+        `<figure>${mediaHTML(a.img, a.title, "Artwork")}<figcaption>${escapeHTML(a.title)}${a.medium ? " · " + escapeHTML(a.medium) : ""}</figcaption></figure>`).join("");
+
+      document.getElementById("journey").innerHTML = (d.tattoos || []).map((t, i) =>
+        `<article class="step">
+          <div><div class="n">${String(i + 1).padStart(2, "0")}</div><div class="mono" style="margin-top:6px">${escapeHTML(t.when || "")}</div></div>
+          <div><h3>${escapeHTML(t.title)}</h3><p>${escapeHTML(t.story || "")}</p></div>
+          ${mediaHTML(t.img, t.title, "Tattoo photo")}
+        </article>`).join("");
+
+      document.getElementById("photoGrid").innerHTML = (d.photography || []).map(p =>
+        `<figure>${mediaHTML(p.img, p.title, "Photo")}<figcaption>${escapeHTML(p.title)}${p.place ? " · " + escapeHTML(p.place) : ""}</figcaption></figure>`).join("");
+
+      gate.hidden = true; gate.style.display = "none";
+      vault.hidden = false;
+      document.querySelectorAll(".vault-link").forEach(a => (a.hidden = false));
+    }
+
+    // Returning visitor → straight in
+    const saved = safeStore.get(KEY);
+    if (saved) { try { renderVault(JSON.parse(saved).name); } catch (e) { renderVault(""); } }
+
+    const form = document.getElementById("gateForm");
+    const err = document.getElementById("gateErr");
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const el = form.elements;
+      const name = el.namedItem("name").value.trim();
+      const email = el.namedItem("email").value.trim();
+      if (!name) { err.textContent = "Add your first name."; return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "That email doesn't look right."; return; }
+      if (!el.namedItem("adult").checked) { err.textContent = "You need to be 18+ to enter."; return; }
+      err.textContent = "";
+      const btn = form.querySelector("button"); btn.disabled = true; btn.textContent = "Unlocking…";
+      await submitLead({ name, email, updates: el.namedItem("updates").checked ? "yes" : "no", source: "Ike gate" });
+      safeStore.set(KEY, JSON.stringify({ name, at: Date.now() }));
+      renderVault(name);
+      window.scrollTo(0, 0);
+    });
+  })();
+</script>
+</body>
+</html>
