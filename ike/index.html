@@ -125,6 +125,54 @@
   .book { position: relative; overflow: hidden; }
   .book::before { content: "IKE IKE IKE IKE IKE IKE"; position: absolute; right: -2%; bottom: -30%; font-family: var(--font-display); font-size: 9rem; color: #ffffff14; white-space: nowrap; pointer-events: none; }
 
+
+  /* ---- Featured ink: play with it, click to open ---- */
+  .featured { display: grid; grid-template-columns: minmax(280px, 440px) 1fr; gap: 56px; align-items: center; }
+  .deck { position: relative; aspect-ratio: 3 / 4; width: 100%; cursor: zoom-in; perspective: 1000px; -webkit-tap-highlight-color: transparent; }
+  .deck .card { position: absolute; inset: 0; border: 3px solid var(--fg); background: #111 center / cover no-repeat; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+  .deck .back1 { transform: rotate(-6deg) translate(-14px, 8px); }
+  .deck .back2 { transform: rotate(5deg) translate(16px, 6px); }
+  .deck:hover .back1 { transform: rotate(-11deg) translate(-38px, 10px); }
+  .deck:hover .back2 { transform: rotate(10deg) translate(40px, 4px); }
+  .deck .front { overflow: hidden; transform-style: preserve-3d; box-shadow: 10px 10px 0 var(--accent); }
+  .deck .front img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+  .deck .glare { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at var(--gx, 30%) var(--gy, 20%), #ffffff55, transparent 45%); mix-blend-mode: overlay; }
+  .loupe { position: absolute; width: 150px; height: 150px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px var(--accent), 0 12px 30px #0008; pointer-events: none; opacity: 0; transform: translate(-50%, -50%) scale(.6); transition: opacity .2s, transform .25s cubic-bezier(.2,.8,.2,1); background-repeat: no-repeat; z-index: 3; }
+  .deck.lens .loupe { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .tap { position: absolute; left: 50%; bottom: -18px; transform: translateX(-50%); z-index: 4; background: var(--accent); color: #fff; font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; padding: 8px 14px; white-space: nowrap; box-shadow: 4px 4px 0 var(--fg); }
+  .motion-on .tap { animation: nudge 1.8s ease-in-out infinite; }
+  @keyframes nudge { 50% { transform: translateX(-50%) translateY(-5px); } }
+  .featured h3 { font-size: clamp(2rem, 4.5vw, 3.4rem); text-transform: uppercase; letter-spacing: -.02em; margin: 10px 0 12px; }
+  .featured .hint { font-family: var(--mono); font-size: .78rem; color: var(--muted); }
+  .featured .hint b { color: var(--fg); }
+
+  /* ---- Lightbox gallery ---- */
+  .lb { position: fixed; inset: 0; z-index: 200; background: #0c0c0c; color: #f1ede6; display: none; flex-direction: column; touch-action: pan-y; }
+  .lb.open { display: flex; }
+  .lb .bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; font-family: var(--mono); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+  .lb .x { background: none; border: 2px solid #f1ede6; color: #f1ede6; width: 44px; height: 44px; font-size: 1.3rem; cursor: pointer; }
+  .lb .x:hover { background: var(--accent); border-color: var(--accent); }
+  .lb .viewport { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; }
+  .lb .track { display: flex; height: 100%; width: 100%; transition: transform .55s cubic-bezier(.2,.8,.2,1); will-change: transform; }
+  .lb .slide { flex: 0 0 100%; height: 100%; display: grid; place-items: center; padding: 8px 60px; }
+  .lb .slide img { max-width: 100%; max-height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s; transform: scale(.86); opacity: .35; cursor: zoom-in; }
+  .lb .slide.cur img { transform: scale(1); opacity: 1; }
+  .lb .slide.cur img.zoomed { transform: scale(2); cursor: zoom-out; }
+  .lb .arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 52px; height: 52px; border: 2px solid #f1ede6; background: #0c0c0c99; color: #f1ede6; font-size: 1.4rem; cursor: pointer; }
+  .lb .arrow:hover { background: var(--accent); border-color: var(--accent); }
+  .lb .prev { left: 10px; } .lb .next { right: 10px; }
+  .lb .cap { text-align: center; padding: 10px 16px 4px; font-family: var(--font-display); text-transform: uppercase; font-size: 1.1rem; min-height: 1.6em; }
+  .lb .thumbs { display: flex; gap: 6px; justify-content: center; padding: 10px 12px 18px; overflow-x: auto; }
+  .lb .thumbs button { flex: none; width: 56px; height: 56px; padding: 0; border: 2px solid transparent; background: #222 center / cover; cursor: pointer; opacity: .5; transition: opacity .2s, transform .2s, border-color .2s; }
+  .lb .thumbs button[aria-current="true"] { opacity: 1; border-color: var(--accent); transform: translateY(-4px); }
+  .lb .burst { position: fixed; z-index: 199; pointer-events: none; border: 3px solid var(--fg); background: #111 center / cover; }
+  @media (max-width: 860px) {
+    .featured { grid-template-columns: 1fr; gap: 40px; }
+    .deck { max-width: 360px; margin: 0 auto; }
+    .lb .slide { padding: 8px 8px; }
+    .lb .arrow { display: none; }
+  }
+
   @media (max-width: 860px) {
     .gate { grid-template-columns: 1fr; }
     .gate .left { min-height: 46vh; border-right: 0; border-bottom: 1px solid var(--line); padding: 40px 20px; }
@@ -183,9 +231,28 @@
       <span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span><span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span>
       <span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span><span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span>
     </div></div>
-    <nav class="tabs"><div class="wrap"><a href="#art">Art</a><a href="#ink">Tattoo journey</a><a href="#life">Photography</a></div></nav>
+    <nav class="tabs"><div class="wrap"><a href="#featured">Featured</a><a href="#art">Art</a><a href="#ink">Tattoo journey</a><a href="#life">Photography</a></div></nav>
 
     <main class="wrap">
+      <section class="part" id="featured">
+        <div class="part-head" data-reveal="wipe"><h2>Featured</h2><span class="mono">Play with it · then open it</span></div>
+        <div class="featured">
+          <div class="deck" id="deck" role="button" tabindex="0" aria-label="Open the gallery" data-reveal="scale">
+            <div class="card back1" id="back1"></div>
+            <div class="card back2" id="back2"></div>
+            <div class="card front" id="front"><img id="coverImg" alt=""><span class="glare"></span></div>
+            <div class="loupe" id="loupe" aria-hidden="true"></div>
+            <span class="tap" id="tapLabel">Tap to open</span>
+          </div>
+          <div data-reveal="right">
+            <span class="stamp">Ike Ink</span>
+            <h3 id="featTitle"></h3>
+            <p id="featNote"></p>
+            <p class="hint"><b>Hover</b> to see the linework up close. <b>Click</b> to break the stack open. <b>Swipe</b>, arrow keys or the thumbnails to move through.</p>
+          </div>
+        </div>
+      </section>
+
       <section class="part" id="art">
         <div class="part-head" data-reveal="wipe"><h2>Art</h2><span class="mono">Paintings · Drawings · Flash</span></div>
         <div class="art-grid" id="artGrid" data-reveal-stagger="70"></div>
@@ -209,6 +276,17 @@
         </div>
       </section>
     </main>
+  </div>
+
+  <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Gallery">
+    <div class="bar"><span id="lbCount">1 / 1</span><span>IKE</span><button class="x" id="lbClose" aria-label="Close gallery">✕</button></div>
+    <div class="viewport" id="lbView">
+      <button class="arrow prev" id="lbPrev" aria-label="Previous">←</button>
+      <div class="track" id="lbTrack"></div>
+      <button class="arrow next" id="lbNext" aria-label="Next">→</button>
+    </div>
+    <div class="cap" id="lbCap"></div>
+    <div class="thumbs" id="lbThumbs"></div>
   </div>
 
   <footer class="footer">
@@ -284,6 +362,143 @@
       window.scrollTo(0, 0);
       renderVault(name, true);
     });
+  })();
+
+  // ---------- Featured deck + gallery ----------
+  (function () {
+    const F = (window.IKE || {}).featured;
+    if (!F) { const sec = document.getElementById("featured"); if (sec) sec.remove(); return; }
+    const deck = document.getElementById("deck"), front = document.getElementById("front"), loupe = document.getElementById("loupe");
+    const reduce = window.Motion && Motion.reduce;
+    document.getElementById("coverImg").src = F.cover;
+    document.getElementById("coverImg").alt = F.title;
+    document.getElementById("featTitle").textContent = F.title;
+    document.getElementById("featNote").textContent = F.note || "";
+    const shots = F.shots || [];
+    document.getElementById("tapLabel").textContent = "Tap to open · " + shots.length + " shots";
+    if (shots[1]) document.getElementById("back1").style.backgroundImage = `url(${shots[1].img})`;
+    if (shots[2]) document.getElementById("back2").style.backgroundImage = `url(${shots[2].img})`;
+
+    // Tilt + glare + magnifying loupe (mouse/trackpad); press-and-hold loupe on touch.
+    const ZOOM = 2.6;
+    function lens(e) {
+      const r = front.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      if (x < 0 || y < 0 || x > r.width || y > r.height) { deck.classList.remove("lens"); return; }
+      const dr = deck.getBoundingClientRect();
+      loupe.style.left = (e.clientX - dr.left) + "px";
+      loupe.style.top = (e.clientY - dr.top) + "px";
+      loupe.style.backgroundImage = `url(${F.cover})`;
+      loupe.style.backgroundSize = `${r.width * ZOOM}px ${r.height * ZOOM}px`;
+      loupe.style.backgroundPosition = `${-(x * ZOOM - 75)}px ${-(y * ZOOM - 75)}px`;
+      deck.classList.add("lens");
+      front.style.setProperty("--gx", (x / r.width) * 100 + "%");
+      front.style.setProperty("--gy", (y / r.height) * 100 + "%");
+      if (!reduce) front.style.transform = `rotateY(${(x / r.width - .5) * 14}deg) rotateX(${-(y / r.height - .5) * 14}deg)`;
+    }
+    let pressTimer = 0, pressed = false;
+    deck.addEventListener("pointermove", e => { if (e.pointerType === "mouse" || pressed) lens(e); });
+    deck.addEventListener("pointerleave", () => { deck.classList.remove("lens"); front.style.transform = ""; });
+    deck.addEventListener("pointerdown", e => {
+      if (e.pointerType !== "mouse") pressTimer = setTimeout(() => { pressed = true; lens(e); }, 260);
+    });
+    const endPress = () => { clearTimeout(pressTimer); if (pressed) { setTimeout(() => (pressed = false), 0); deck.classList.remove("lens"); front.style.transform = ""; } };
+    deck.addEventListener("pointerup", endPress);
+    deck.addEventListener("pointercancel", endPress);
+
+    // ---------- Lightbox ----------
+    const lb = document.getElementById("lb"), track = document.getElementById("lbTrack"), thumbs = document.getElementById("lbThumbs");
+    const cap = document.getElementById("lbCap"), count = document.getElementById("lbCount");
+    track.innerHTML = shots.map((s, i) => `<div class="slide"><img src="${s.img}" alt="${escapeHTML(s.caption || "")}" draggable="false"></div>`).join("");
+    thumbs.innerHTML = shots.map((s, i) => `<button style="background-image:url(${s.img})" aria-label="Show ${i + 1}"></button>`).join("");
+    let cur = 0, lastFocus = null;
+
+    function go(i, instant) {
+      cur = (i + shots.length) % shots.length;
+      track.style.transition = instant ? "none" : "";
+      track.style.transform = `translateX(${-cur * 100}%)`;
+      track.querySelectorAll(".slide").forEach((el, k) => { el.classList.toggle("cur", k === cur); el.querySelector("img").classList.remove("zoomed"); });
+      thumbs.querySelectorAll("button").forEach((b, k) => b.setAttribute("aria-current", String(k === cur)));
+      cap.textContent = shots[cur].caption || "";
+      count.textContent = `${cur + 1} / ${shots.length}`;
+    }
+
+    function open() {
+      if (pressed) return;
+      lastFocus = document.activeElement;
+      const r = front.getBoundingClientRect();
+      // Burst: copies of the deck's cards fly out and fan across the screen, then the gallery appears.
+      const flyers = shots.slice(0, 6).map((s, i) => {
+        const f = document.createElement("div");
+        f.className = "burst";
+        Object.assign(f.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px", backgroundImage: `url(${s.img})` });
+        lb.appendChild(f);
+        return f;
+      });
+      go(0, true);
+      lb.classList.add("open");
+      document.body.style.overflow = "hidden";
+      if (reduce) { flyers.forEach(f => f.remove()); document.getElementById("lbClose").focus(); return; }
+      const cx = innerWidth / 2 - (r.left + r.width / 2), cy = innerHeight / 2 - (r.top + r.height / 2);
+      const n = flyers.length;
+      lb.animate([{ backgroundColor: "rgba(12,12,12,0)" }, { backgroundColor: "rgba(12,12,12,1)" }], { duration: 450, easing: "ease-out" });
+      track.animate([{ opacity: 0, transform: `translateX(0) scale(.9)` }, { opacity: 1, transform: `translateX(0) scale(1)` }], { duration: 400, delay: 520, easing: "ease-out", fill: "backwards" });
+      flyers.forEach((f, i) => {
+        const spread = (i - (n - 1) / 2);
+        f.animate([
+          { transform: "translate(0,0) rotate(0) scale(1)", opacity: 1 },
+          { transform: `translate(${cx + spread * Math.min(150, innerWidth / (n + 1))}px, ${cy + Math.abs(spread) * 18}px) rotate(${spread * 9}deg) scale(.62)`, opacity: 1, offset: .55 },
+          { transform: `translate(${cx}px, ${cy}px) rotate(0) scale(.9)`, opacity: 0 }
+        ], { duration: 900, delay: i * 35, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" }).onfinish = () => f.remove();
+      });
+      setTimeout(() => document.getElementById("lbClose").focus(), 50);
+    }
+    function close() {
+      lb.classList.remove("open");
+      document.body.style.overflow = "";
+      if (lastFocus) lastFocus.focus();
+    }
+
+    deck.addEventListener("click", open);
+    deck.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+    document.getElementById("lbClose").addEventListener("click", close);
+    document.getElementById("lbPrev").addEventListener("click", () => go(cur - 1));
+    document.getElementById("lbNext").addEventListener("click", () => go(cur + 1));
+    thumbs.addEventListener("click", e => { const b = e.target.closest("button"); if (b) go([...thumbs.children].indexOf(b)); });
+    track.addEventListener("click", e => { const img = e.target.closest(".slide.cur img"); if (img && !dragMoved) img.classList.toggle("zoomed"); });
+    document.addEventListener("keydown", e => {
+      if (!lb.classList.contains("open")) return;
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowRight") go(cur + 1);
+      if (e.key === "ArrowLeft") go(cur - 1);
+    });
+
+    // Swipe left/right to move, swipe down to close.
+    let sx = 0, sy = 0, dx = 0, dy = 0, dragging = false, dragMoved = false;
+    const view = document.getElementById("lbView");
+    view.addEventListener("pointerdown", e => {
+      if (e.target.closest(".arrow")) return;
+      dragging = true; dragMoved = false; sx = e.clientX; sy = e.clientY; dx = dy = 0;
+      track.style.transition = "none";
+    });
+    view.addEventListener("pointermove", e => {
+      if (!dragging) return;
+      dx = e.clientX - sx; dy = e.clientY - sy;
+      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) dragMoved = true;
+      if (Math.abs(dx) > Math.abs(dy)) track.style.transform = `translateX(calc(${-cur * 100}% + ${dx}px))`;
+      else if (dy > 0) track.style.transform = `translateX(${-cur * 100}%) translateY(${dy}px)`;
+    });
+    const up = () => {
+      if (!dragging) return;
+      dragging = false; track.style.transition = "";
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) go(cur + (dx < 0 ? 1 : -1));
+      else if (dy > 110 && dy > Math.abs(dx)) { track.style.transform = `translateX(${-cur * 100}%)`; close(); }
+      else go(cur);
+      setTimeout(() => (dragMoved = false), 0);
+    };
+    view.addEventListener("pointerup", up);
+    view.addEventListener("pointercancel", up);
+    view.addEventListener("pointerleave", up);
   })();
 </script>
 </body>

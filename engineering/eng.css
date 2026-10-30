@@ -96,3 +96,7 @@ section.block { padding: 64px 0 0; }
 .grid { transition: opacity .25s ease, transform .25s ease; }
 .timeline li::before { transition: background .4s ease, transform .4s ease; }
 .timeline li:hover::before { background: var(--accent); transform: scale(1.2); }
+
+/* Landing after the glass-shatter transition from the hub */
+.from-glass body { animation: settle .8s cubic-bezier(.2,.8,.2,1); }
+@keyframes settle { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: none; } }

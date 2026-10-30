@@ -11,6 +11,22 @@
 window.IKE = {
   intro: "Ike is where the work stops being polite. Paintings, flash, the tattoos — mine and the ones I've put on other people — and photographs of the life around them.",
 
+  // The interactive "featured" piece at the top of the vault.
+  // cover = the image people play with; shots = everything that opens when they click it.
+  featured: {
+    title: "Red Orchid Vine",
+    note: "Fine line + red.",
+    cover: "../images/ike/tattoo-02.jpg",
+    shots: [
+      { img: "../images/ike/tattoo-02.jpg", caption: "Red Orchid Vine — fine line" },
+      { img: "../images/ike/tattoo-03.jpg", caption: "Red Orchid Vine — flow" },
+      { img: "../images/ike/tattoo-01.jpg", caption: "Lower back — full span" },
+      { img: "../images/ike/fire-02.jpg", caption: "Fire, mural wall" },
+      { img: "../images/ike/fire-01.jpg", caption: "Fire I" },
+      { img: "../images/ike/fire-03.jpg", caption: "Fire III" }
+    ]
+  },
+
   art: [
     { title: "Untitled I", medium: "Ink on paper", year: "", img: "" },
     { title: "Untitled II", medium: "Mixed media", year: "", img: "" },
