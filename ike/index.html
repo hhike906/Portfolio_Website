@@ -388,9 +388,14 @@
       const dr = deck.getBoundingClientRect();
       loupe.style.left = (e.clientX - dr.left) + "px";
       loupe.style.top = (e.clientY - dr.top) + "px";
+      // Match the cover's object-fit: cover + object-position: 50% 80% so the loupe shows exactly what's under the cursor.
+      const img = document.getElementById("coverImg");
+      const iw = img.naturalWidth || r.width, ih = img.naturalHeight || r.height;
+      const sc = Math.max(r.width / iw, r.height / ih), dw = iw * sc, dh = ih * sc;
+      const ox = (r.width - dw) * 0.5, oy = (r.height - dh) * 0.8;
       loupe.style.backgroundImage = `url(${F.cover})`;
-      loupe.style.backgroundSize = `${r.width * ZOOM}px ${r.height * ZOOM}px`;
-      loupe.style.backgroundPosition = `${-(x * ZOOM - 75)}px ${-(y * ZOOM - 75)}px`;
+      loupe.style.backgroundSize = `${dw * ZOOM}px ${dh * ZOOM}px`;
+      loupe.style.backgroundPosition = `${-((x - ox) * ZOOM - 75)}px ${-((y - oy) * ZOOM - 75)}px`;
       deck.classList.add("lens");
       front.style.setProperty("--gx", (x / r.width) * 100 + "%");
       front.style.setProperty("--gy", (y / r.height) * 100 + "%");
