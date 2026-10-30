@@ -28,11 +28,13 @@ window.IKE = {
   ],
 
   photography: [
-    { title: "Street", place: "Wichita", img: "" },
+    { title: "Fire I", place: "Night", img: "../images/ike/fire-01.jpg" },
+    { title: "Fire II", place: "Mural wall", img: "../images/ike/fire-02.jpg" },
+    { title: "Fire III", place: "Night", img: "../images/ike/fire-03.jpg" },
+    { title: "Street", place: "", img: "" },
     { title: "Portrait", place: "", img: "" },
     { title: "Lifestyle", place: "", img: "" },
     { title: "Studio", place: "", img: "" },
-    { title: "Night", place: "", img: "" },
     { title: "Behind the scenes", place: "", img: "" }
   ]
 };
