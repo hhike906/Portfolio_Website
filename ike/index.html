@@ -202,10 +202,10 @@
       <span class="ink" aria-hidden="true"></span>
       <span class="stamp">Members only</span>
       <h1 data-text="IKE">Ike</h1>
-      <p>Art. Ink. Photographs from the life around it. The full archive is free — it just costs you an email.</p>
+      <p data-t="ike.gateText">Art. Ink. Photographs from the life around it. The full archive is free — it just costs you an email.</p>
     </div>
     <div class="right">
-      <h2>Get in.</h2>
+      <h2 data-t="ike.gateTitle">Get in.</h2>
       <form id="gateForm" novalidate>
         <label>First name<input type="text" name="name" autocomplete="given-name" required></label>
         <label>Email<input type="email" name="email" autocomplete="email" required></label>
@@ -213,7 +213,7 @@
         <label class="check"><input type="checkbox" name="updates" checked> Send me new drops, flash days and shoot openings.</label>
         <p class="err" id="gateErr" aria-live="polite"></p>
         <button class="btn" type="submit"><span>Unlock Ike</span></button>
-        <p class="fine">No spam. Unsubscribe any time.</p>
+        <p data-t="ike.gateFine" class="fine">No spam. Unsubscribe any time.</p>
       </form>
     </div>
   </main>
@@ -293,11 +293,14 @@
     <div class="wrap">
       <span>© <span data-year></span> Ike</span>
       <a href="../">All sites</a>
+      <a class="admin-link" href="../admin/#ike" data-admin-link><span aria-hidden="true">✎</span> Admin</a>
     </div>
   </footer>
 
 <script src="../assets/config.js"></script>
 <script src="../assets/site.js"></script>
+<script src="../data/text.js"></script>
+<script src="../assets/bind.js"></script>
 <script src="content.js"></script>
 <script src="../assets/motion.js"></script>
 <script>

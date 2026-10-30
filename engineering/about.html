@@ -29,25 +29,25 @@
     <div class="about-grid">
       <div class="portrait" data-reveal="left">
         <!-- Replace with: <img class="media" src="../images/eng/portrait.jpg" alt="Tanatswa Mafume"> -->
-        <div class="ph" style="--ratio:4/5" role="img" aria-label="Portrait of Tanatswa Mafume">Portrait</div>
-        <p class="mono" style="margin-top:14px">Available from Dec 2026 · Open to relocation</p>
+        <div class="ph" style="--ratio:4/5" role="img" aria-label="Portrait of Tanatswa Mafume" data-img="about.portrait">Portrait</div>
+        <p data-t="about.availability" class="mono" style="margin-top:14px">Available from Dec 2026 · Open to relocation</p>
       </div>
 
       <div class="prose">
         <p class="mono">About</p>
-        <h1 data-split style="font-size:clamp(2rem,4vw,2.8rem);font-weight:600;letter-spacing:-.02em">An engineer who has actually worked the floor.</h1>
+        <h1 data-t="about.headline" data-split style="font-size:clamp(2rem,4vw,2.8rem);font-weight:600;letter-spacing:-.02em">An engineer who has actually worked the floor.</h1>
 
-        <p data-reveal>I'm Tanatswa Mafume, an industrial engineering student at Wichita State University graduating in December 2026. Most engineers learn the process from the outside. I learned it from inside — laying up composite parts for aerospace research at NIAR, welding steel frames on contract jobs, and running a water-jet on public installation work.</p>
+        <p data-reveal data-t="about.p1">I'm Tanatswa Mafume, an industrial engineering student at Wichita State University graduating in December 2026. Most engineers learn the process from the outside. I learned it from inside — laying up composite parts for aerospace research at NIAR, welding steel frames on contract jobs, and running a water-jet on public installation work.</p>
 
-        <p data-reveal>That's the lens I bring to industrial engineering. When I map a process, I know what the operator is actually doing at each step, where the parts pile up, and why the "official" time standard is wrong. At the GoCreate makerspace I used that to untangle a backlog of roughly 300 pending access requests and an equipment schedule members called unfair. In senior design, I'm on a consulting team improving a production gluing line for Bosch Home Comfort.</p>
+        <p data-reveal data-t="about.p2">That's the lens I bring to industrial engineering. When I map a process, I know what the operator is actually doing at each step, where the parts pile up, and why the "official" time standard is wrong. At the GoCreate makerspace I used that to untangle a backlog of roughly 300 pending access requests and an equipment schedule members called unfair. In senior design, I'm on a consulting team improving a production gluing line for Bosch Home Comfort.</p>
 
-        <p data-reveal>I also design and build products under my own label, Hove Huru — copper jewelry, furniture and metalwork. Running it has taught me costing, sourcing and design for manufacture with my own money on the line, which is the fastest teacher there is.</p>
+        <p data-reveal data-t="about.p3">I also design and build products under my own label, Hove Huru — copper jewelry, furniture and metalwork. Running it has taught me costing, sourcing and design for manufacture with my own money on the line, which is the fastest teacher there is.</p>
 
         <h2 data-reveal>What I'm looking for</h2>
-        <p data-reveal>A full-time role starting around December 2026 in <strong>manufacturing, operations, supply chain, logistics or construction</strong> — somewhere I can improve real processes and be measured on results. I care more about what a role will teach me and the problems I'll own than the title.</p>
+        <p data-reveal data-t="about.lookingFor">A full-time role starting around December 2026 in <strong>manufacturing, operations, supply chain, logistics or construction</strong> — somewhere I can improve real processes and be measured on results. I care more about what a role will teach me and the problems I'll own than the title.</p>
 
         <h2 data-reveal>Experience</h2>
-        <ol class="timeline" data-reveal-stagger="90">
+        <ol class="timeline" data-list="about.experience" data-reveal-stagger="90">
           <li data-reveal><span class="when">Oct 2022 – Present</span><b>Composites Layup & Research Technician</b>NIAR, Wichita State University</li>
           <li data-reveal><span class="when">Fall 2026</span><b>Senior Design — ACE Consulting</b>Line 5 insulation gluing improvement for Bosch Home Comfort</li>
           <li data-reveal><span class="when">GoCreate makerspace</span><b>Fabrication & Operations</b>Contract fabrication (RedGuard frames, airport sign, pinball build) and access/scheduling process analysis</li>
@@ -55,20 +55,20 @@
         </ol>
 
         <h2 data-reveal>Education</h2>
-        <ol class="timeline" data-reveal-stagger="90">
+        <ol class="timeline" data-list="about.education" data-reveal-stagger="90">
           <li data-reveal><span class="when">Expected Dec 2026</span><b>B.S. Industrial Engineering</b>Wichita State University · Statistical Quality Control, Information Systems, Ergonomics & Workplace Safety</li>
         </ol>
 
         <h2 data-reveal>Leadership</h2>
-        <ol class="timeline" data-reveal-stagger="90">
+        <ol class="timeline" data-list="about.leadership" data-reveal-stagger="90">
           <li data-reveal><b>Treasurer — National Society of Black Engineers</b>Wichita State chapter</li>
           <li data-reveal><b>Student Fees Commissioner</b>Student Government, Wichita State</li>
           <li data-reveal><b>Member — African & Caribbean Student Association</b>and university soccer</li>
         </ol>
 
         <section class="contact-box" id="contact" data-reveal="scale">
-          <h2 data-reveal>Let's talk.</h2>
-          <p>Hiring for manufacturing, operations or supply chain? I'll reply within a day.</p>
+          <h2 data-t="about.contactTitle" data-reveal>Let's talk.</h2>
+          <p data-t="about.contactText">Hiring for manufacturing, operations or supply chain? I'll reply within a day.</p>
           <div style="display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn" data-email href="#">Email me</a>
             <a class="btn ghost" data-linkedin href="#" target="_blank" rel="noopener">LinkedIn</a>
@@ -83,11 +83,14 @@
     <div class="wrap">
       <span>© <span data-year></span> Tanatswa Mafume · Wichita, KS</span>
       <a href="./">Back to projects</a>
+      <a class="admin-link" href="../admin/#about" data-admin-link><span aria-hidden="true">✎</span> Admin</a>
     </div>
   </footer>
 
 <script src="../assets/config.js"></script>
 <script src="../assets/site.js"></script>
+<script src="../data/text.js"></script>
+<script src="../assets/bind.js"></script>
 <script src="../assets/motion.js"></script>
 </body>
 </html>

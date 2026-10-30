@@ -46,6 +46,7 @@
     document.querySelectorAll("[data-resume]").forEach(el => {
       if (cfg.resumePdf) el.href = (el.dataset.resume || "") + cfg.resumePdf; else el.remove();
     });
+    if (cfg.showAdminLink === false) document.querySelectorAll("[data-admin-link]").forEach(el => el.remove());
     document.querySelectorAll("[data-ig]").forEach(el => {
       const h = (cfg.instagram || {})[el.dataset.ig];
       if (h) { el.href = "https://instagram.com/" + h; el.textContent = "@" + h; } else el.remove();

@@ -80,40 +80,40 @@
 <body>
   <header class="hub">
     <div class="wrap">
-      <h1 data-split>Tanatswa Mafume</h1>
-      <p>Engineer · Founder · Artist — Wichita, KS</p>
+      <h1 data-t="hub.name" data-split>Tanatswa Mafume</h1>
+      <p data-t="hub.tagline">Engineer · Founder · Artist — Wichita, KS</p>
     </div>
   </header>
 
   <main class="doors">
     <a class="door eng" href="engineering/" data-spot data-shatter="#f6f7f9">
       <span class="grid-bg" aria-hidden="true"></span>
-      <span class="num">01 — Engineering</span>
+      <span data-t="hub.eng.label" class="num">01 — Engineering</span>
       <div class="reveal-up">
-        <h2>Industrial Engineering</h2>
-        <p class="what">Projects from class, NIAR and the shop floor. Process improvement, quality, fabrication.</p>
-        <span class="go">Break the glass</span>
+        <h2 data-t="hub.eng.title">Industrial Engineering</h2>
+        <p data-t="hub.eng.text" class="what">Projects from class, NIAR and the shop floor. Process improvement, quality, fabrication.</p>
+        <span data-t="hub.eng.cta" class="go">Break the glass</span>
       </div>
     </a>
 
     <a class="door hh" href="hovehuru/" data-spot>
       <span class="glow" aria-hidden="true"></span>
       <span class="ring" aria-hidden="true"></span>
-      <span class="num">02 — The House</span>
+      <span data-t="hub.hh.label" class="num">02 — The House</span>
       <div class="reveal-up">
-        <h2>Hove Huru</h2>
-        <p class="what">A Zimbabwe-rooted luxury house. Copper bracelets, furniture and metalwork, made by hand.</p>
-        <span class="go">Enter the shop</span>
+        <h2 data-t="hub.hh.title">Hove Huru</h2>
+        <p data-t="hub.hh.text" class="what">A Zimbabwe-rooted luxury house. Copper bracelets, furniture and metalwork, made by hand.</p>
+        <span data-t="hub.hh.cta" class="go">Enter the shop</span>
       </div>
     </a>
 
     <a class="door ike" href="ike/" data-spot>
-      <span class="num">03 — Art</span>
+      <span data-t="hub.ike.label" class="num">03 — Art</span>
       <div class="reveal-up">
-        <span class="stamp">Members only</span>
-        <h2 data-text="Ike">Ike</h2>
-        <p class="what">Art, the tattoo journey, and photography from life. Free access with your email.</p>
-        <span class="go">Get access</span>
+        <span data-t="hub.ike.badge" class="stamp">Members only</span>
+        <h2 data-t="hub.ike.title" data-text="Ike">Ike</h2>
+        <p data-t="hub.ike.text" class="what">Art, the tattoo journey, and photography from life. Free access with your email.</p>
+        <span data-t="hub.ike.cta" class="go">Get access</span>
       </div>
     </a>
   </main>
@@ -122,11 +122,14 @@
     <div class="wrap">
       <span>© <span data-year></span> Tanatswa Mafume</span>
       <a data-email href="#"></a>
+      <a class="admin-link" href="admin/#home" data-admin-link><span aria-hidden="true">✎</span> Admin</a>
     </div>
   </footer>
 
 <script src="assets/config.js"></script>
 <script src="assets/site.js"></script>
+<script src="data/text.js"></script>
+<script src="assets/bind.js"></script>
 <script src="assets/motion.js"></script>
 <script src="assets/shatter.js"></script>
 </body>

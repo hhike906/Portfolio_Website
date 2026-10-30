@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — Tanatswa Mafume</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <aside class="side">
+    <div class="me">
+      <div class="logo">TM</div>
+      <div><b>Site admin</b><span id="connState">Not connected</span></div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+    <div class="side-foot">
+      <a href="../" target="_blank" rel="noopener">View site ↗</a>
+      <button type="button" class="link" id="openToken">GitHub key</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <div>
+        <p class="crumb" id="crumb">Admin</p>
+        <h1 id="pageTitle">Loading…</h1>
+      </div>
+      <a class="btn ghost" id="openPage" href="../" target="_blank" rel="noopener">Open page ↗</a>
+    </header>
+    <div id="notice" class="notice" hidden></div>
+    <div id="view" class="view"></div>
+  </main>
+
+  <div class="savebar" id="savebar" hidden>
+    <span id="dirtyText">Unsaved changes</span>
+    <div class="savebar-actions">
+      <button type="button" class="btn ghost" id="discard">Discard</button>
+      <button type="button" class="btn primary" id="publish">Publish</button>
+    </div>
+  </div>
+
+  <dialog id="tokenDlg">
+    <form method="dialog" class="dlg">
+      <h2>Connect your GitHub</h2>
+      <p>The admin saves changes by updating your site's files on GitHub. It needs a key that only lets it edit <b>this one website</b>. You make it once; it's stored only in this browser.</p>
+      <ol class="steps">
+        <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → New fine-grained token</a>.</li>
+        <li><b>Token name:</b> Website admin. <b>Expiration:</b> 90 days.</li>
+        <li><b>Repository access:</b> Only select repositories → <b>Portfolio_Website</b>.</li>
+        <li><b>Permissions → Repository → Contents:</b> Read and write.</li>
+        <li>Tap <b>Generate token</b>, copy it, and paste it below.</li>
+      </ol>
+      <label class="field"><span>GitHub key</span><input type="password" id="tokenInput" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></label>
+      <p class="small" id="tokenMsg"></p>
+      <div class="dlg-actions">
+        <button type="button" class="btn ghost" id="forgetToken">Forget key</button>
+        <span style="flex:1"></span>
+        <button type="button" class="btn ghost" id="closeToken">Cancel</button>
+        <button type="button" class="btn primary" id="saveToken">Connect</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

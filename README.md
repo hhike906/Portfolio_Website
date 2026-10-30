@@ -11,13 +11,25 @@ One site, three doors:
 
 **Send recruiters straight to `/engineering/`**, not the hub.
 
-## Editing from an iPad (no code)
+## Admin (edit text and photos without code)
+
+Open **/admin/** — or tap the small **✎ Admin** button at the bottom of any page.
+
+- Every section has its own tab: Home page, Engineering, About page, Hove Huru, Ike, Settings.
+- Edit any text, add/reorder/delete projects, products, orders, tattoo photos and art.
+- **Upload photo** resizes to 1600px and strips camera/GPS data before publishing.
+- Nothing goes live until you press **Publish**. Unpublished edits are kept on your device if you close the tab.
+- First publish asks for a GitHub key (fine-grained token, *Contents: Read and write*, only this repository). It's stored in that browser only.
+- Turn the footer Admin button off in **Settings** when the site is finished; /admin/ keeps working.
+
+## Editing by hand (optional)
 
 All content lives in plain data files. On github.com open the file, tap the ✏️ pencil, edit, then **Commit changes**. The site updates in about a minute.
 
 | To change… | Edit this file |
 |---|---|
 | Email, LinkedIn, resume, Instagram, form endpoint | `assets/config.js` |
+| Any page text (headlines, paragraphs, about page lists) | `data/text.js` |
 | Engineering projects | `engineering/projects.js` |
 | About page text | `engineering/about.html` |
 | Products, prices, buy links | `hovehuru/products.js` |

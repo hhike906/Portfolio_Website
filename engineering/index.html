@@ -29,9 +29,9 @@
   <main>
     <section class="hero" data-spot>
       <div class="wrap">
-        <p class="mono" data-reveal>Industrial Engineering · Wichita State University</p>
-        <h1 data-split>I find the bottleneck, then I build the fix.</h1>
-        <p class="lede" data-reveal style="--d:400ms">Industrial engineer with hands-on manufacturing experience — aerospace composites at NIAR, process improvement on a live production line, and a fabrication background in welding, CNC and water-jet.</p>
+        <p data-t="eng.eyebrow" class="mono" data-reveal>Industrial Engineering · Wichita State University</p>
+        <h1 data-t="eng.headline" data-split>I find the bottleneck, then I build the fix.</h1>
+        <p data-t="eng.lede" class="lede" data-reveal style="--d:400ms">Industrial engineer with hands-on manufacturing experience — aerospace composites at NIAR, process improvement on a live production line, and a fabrication background in welding, CNC and water-jet.</p>
         <div class="cta" data-reveal style="--d:550ms">
           <a class="btn" href="#projects">See the work</a>
           <a class="btn ghost" href="about.html">About me</a>
@@ -39,10 +39,10 @@
         </div>
 
         <div class="stats" data-reveal-stagger="90">
-          <div class="stat" data-reveal><b>B.S. Industrial Eng.</b><span>Expected Dec 2026</span></div>
-          <div class="stat" data-reveal><b>NIAR</b><span>Composites tech since 2022</span></div>
-          <div class="stat" data-reveal><b>Bosch</b><span>Senior design sponsor</span></div>
-          <div class="stat" data-reveal><b>Shop-floor fluent</b><span>Weld · CNC · water-jet</span></div>
+          <div class="stat" data-reveal><b data-t="eng.stat1.title">B.S. Industrial Eng.</b><span data-t="eng.stat1.sub">Expected Dec 2026</span></div>
+          <div class="stat" data-reveal><b data-t="eng.stat2.title">NIAR</b><span data-t="eng.stat2.sub">Composites tech since 2022</span></div>
+          <div class="stat" data-reveal><b data-t="eng.stat3.title">Bosch</b><span data-t="eng.stat3.sub">Senior design sponsor</span></div>
+          <div class="stat" data-reveal><b data-t="eng.stat4.title">Shop-floor fluent</b><span data-t="eng.stat4.sub">Weld · CNC · water-jet</span></div>
         </div>
       </div>
     </section>
@@ -81,11 +81,14 @@
     <div class="wrap">
       <span>© <span data-year></span> Tanatswa Mafume · Wichita, KS</span>
       <span><a data-email href="#"></a></span>
+      <a class="admin-link" href="../admin/#engineering" data-admin-link><span aria-hidden="true">✎</span> Admin</a>
     </div>
   </footer>
 
 <script src="../assets/config.js"></script>
 <script src="../assets/site.js"></script>
+<script src="../data/text.js"></script>
+<script src="../assets/bind.js"></script>
 <script src="projects.js"></script>
 <script src="../assets/motion.js"></script>
 <script>

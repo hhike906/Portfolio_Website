@@ -128,11 +128,11 @@
     <section class="hero" aria-label="Hove Huru — the Ninth Fin copper bracelet">
       <canvas id="bracelet" aria-label="Interactive 3D copper bracelet. Drag to rotate." role="img"></canvas>
       <div class="top">
-        <p class="eyebrow" data-reveal>A Zimbabwe-rooted luxury house</p>
+        <p data-t="hh.eyebrow" class="eyebrow" data-reveal>A Zimbabwe-rooted luxury house</p>
         <h1 data-split>Hove Huru</h1>
       </div>
       <div class="bottom">
-        <blockquote data-reveal style="--d:500ms">Not a brand. A house — of six orders, of objects made to be inherited.</blockquote>
+        <blockquote data-t="hh.quote" data-reveal style="--d:500ms">Not a brand. A house — of six orders, of objects made to be inherited.</blockquote>
         <a class="btn" href="#shop" data-magnetic data-reveal style="--d:700ms">Enter the shop</a>
         <div><span class="drag-hint" data-reveal style="--d:900ms">Drag to turn the bracelet</span></div>
       </div>
@@ -165,19 +165,19 @@
 
     <section class="block" id="orders">
       <div class="wrap">
-        <div class="head" data-reveal><p class="eyebrow">The mythology</p><h2>The Six Orders</h2><p class="note" style="max-width:52ch;margin:0 auto">Every piece belongs to an order. Every owner chooses one.</p></div>
+        <div class="head" data-reveal><p class="eyebrow">The mythology</p><h2>The Six Orders</h2><p data-t="hh.ordersNote" class="note" style="max-width:52ch;margin:0 auto">Every piece belongs to an order. Every owner chooses one.</p></div>
         <div class="clans" id="clans" data-reveal-stagger="80"></div>
       </div>
     </section>
 
     <section class="block" id="craft">
       <div class="wrap craft">
-        <div class="ph" role="img" aria-label="Workshop" data-reveal="wipe">Workshop photo</div>
+        <div class="ph" role="img" aria-label="Workshop" data-reveal="wipe" data-img="hh.workshopImg">Workshop photo</div>
         <div data-reveal="right">
           <p class="eyebrow">The workshop</p>
-          <h2 style="font-size:clamp(2rem,4vw,2.8rem);font-weight:500">Made by one pair of hands.</h2>
-          <p>Every Hove Huru piece is cut, braided, welded and finished by the founder in Wichita, Kansas — an industrial engineer and fabricator by training.</p>
-          <p>We make few things, slowly, so each one can outlast its owner.</p>
+          <h2 data-t="hh.craftTitle" style="font-size:clamp(2rem,4vw,2.8rem);font-weight:500">Made by one pair of hands.</h2>
+          <p data-t="hh.craftP1">Every Hove Huru piece is cut, braided, welded and finished by the founder in Wichita, Kansas — an industrial engineer and fabricator by training.</p>
+          <p data-t="hh.craftP2">We make few things, slowly, so each one can outlast its owner.</p>
           <a class="btn ghost" href="#" data-inquire="Custom commission">Commission a piece</a>
           <p style="margin-top:20px"><a data-ig="hovehuru" href="#" target="_blank" rel="noopener"></a></p>
         </div>
@@ -189,6 +189,7 @@
     <div class="wrap">
       <span>© <span data-year></span> Hove Huru LLC</span>
       <a data-email href="#"></a>
+      <a class="admin-link" href="../admin/#hovehuru" data-admin-link><span aria-hidden="true">✎</span> Admin</a>
     </div>
   </footer>
 
@@ -210,6 +211,8 @@
 
 <script src="../assets/config.js"></script>
 <script src="../assets/site.js"></script>
+<script src="../data/text.js"></script>
+<script src="../assets/bind.js"></script>
 <script src="products.js"></script>
 <script src="../assets/motion.js"></script>
 <script type="module" src="../assets/bracelet.js"></script>

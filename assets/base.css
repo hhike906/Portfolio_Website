@@ -95,3 +95,8 @@ button, input, textarea, select { font: inherit; }
   .nav { gap: 14px; }
   .topbar .wrap { flex-wrap: wrap; padding: 10px 0; }
 }
+
+/* Discreet admin entry in every footer (turn off in Admin → Settings) */
+.admin-link { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--muted); text-decoration: none; border: 1px solid var(--line); padding: 6px 12px; border-radius: 999px; opacity: .7; transition: opacity .2s, border-color .2s; }
+.admin-link:hover, .admin-link:focus-visible { opacity: 1; border-color: currentColor; }
+.footer .wrap { align-items: center; }
