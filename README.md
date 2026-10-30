@@ -41,3 +41,9 @@ Keep photos under ~500 KB each (export at 1600px wide, JPG quality ~75).
 
 - The Ike gate is a **lead-capture gate, not a lock.** Anyone technical can read `ike/content.js` directly. Fine for art and lifestyle work; do **not** put anything there that must stay private.
 - Hosting is GitHub Pages: free, static, no server. That's why payments run through Stripe links and emails through Formspree.
+
+## Motion & 3D
+
+- `assets/bracelet.js` — the interactive 3D copper bracelet on the Hove Huru hero (Three.js, bundled in `assets/vendor/`, no CDN). Drag to spin; pauses when off-screen.
+- `assets/motion.js` — scroll reveals, tilt, spotlights, text rise. Add `data-reveal` to any element to animate it in.
+- Visitors with "reduce motion" turned on get a still, fully readable site.

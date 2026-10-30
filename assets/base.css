@@ -63,6 +63,34 @@ button, input, textarea, select { font: inherit; }
 .footer { border-top: 1px solid var(--line); padding: 32px 0 48px; color: var(--muted); font-size: .85rem; margin-top: 80px; }
 .footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 
+/* ---- Motion (driven by assets/motion.js; content stays visible without JS) ---- */
+.motion-on [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .8s cubic-bezier(.2,.7,.2,1) var(--d, 0ms), transform .8s cubic-bezier(.2,.7,.2,1) var(--d, 0ms);
+}
+.motion-on [data-reveal="left"]  { transform: translateX(-40px); }
+.motion-on [data-reveal="right"] { transform: translateX(40px); }
+.motion-on [data-reveal="scale"] { transform: scale(.94); }
+.motion-on [data-reveal].in { opacity: 1; transform: none; }
+/* Wipe: a cover panel slides away (keeps the element measurable for the observer) */
+.motion-on [data-reveal="wipe"] { opacity: 1; transform: none; position: relative; }
+.motion-on [data-reveal="wipe"]::after { content: ""; position: absolute; inset: -1px; background: var(--wipe, var(--bg)); transform-origin: 100% 50%; transition: transform 1s cubic-bezier(.7,0,.2,1) var(--d, 0ms); pointer-events: none; z-index: 2; }
+.motion-on [data-reveal="wipe"].in::after { transform: scaleX(0); }
+
+[data-split] .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; }
+[data-split] .w > span { display: inline-block; transform: translateY(110%); transition: transform .9s cubic-bezier(.2,.8,.2,1) var(--d, 0ms); }
+[data-split].split-in .w > span { transform: none; }
+
+[data-tilt] { transition: transform .25s ease-out; transform-style: preserve-3d; will-change: transform; }
+[data-magnetic] { transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+
+.progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); z-index: 100; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+
 @media (max-width: 640px) {
   .nav { gap: 14px; }
   .topbar .wrap { flex-wrap: wrap; padding: 10px 0; }

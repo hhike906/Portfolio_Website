@@ -27,7 +27,7 @@
     min-height: 62vh; padding: 32px; text-decoration: none; overflow: hidden;
     transition: filter .25s ease;
   }
-  .door:hover, .door:focus-visible { filter: brightness(1.08); }
+  .door:focus-visible { outline: 2px solid currentColor; outline-offset: -6px; }
   .door .num { font-family: "IBM Plex Mono", monospace; font-size: .75rem; letter-spacing: .14em; opacity: .7; }
   .door h2 { font-size: clamp(2rem, 4vw, 3.2rem); margin: 0 0 12px; }
   .door .what { max-width: 30ch; opacity: .85; margin: 0 0 24px; }
@@ -49,6 +49,28 @@
 
   .door > * { position: relative; }
 
+  /* ---- Motion ---- */
+  .door::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .5s ease; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), var(--spot), transparent 65%); }
+  .door:hover::before { opacity: 1; }
+  .door.eng { --spot: #1f4e7922; } .door.hh { --spot: #c98b4f33; } .door.ike { --spot: #d1281f22; }
+  .door .reveal-up { transform: translateY(14px); transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+  .door:hover .reveal-up { transform: none; }
+  .door .what { transition: opacity .5s ease; }
+  .door.eng .grid-bg { animation: drift 24s linear infinite; }
+  @keyframes drift { to { background-position: 28px 28px, 28px 28px; } }
+  .door.hh .glow { animation: breathe 6s ease-in-out infinite; }
+  @keyframes breathe { 50% { transform: scale(1.25); opacity: .7; } }
+  .door.hh .ring { position: absolute; right: 8%; top: 18%; width: 140px; aspect-ratio: 1; border-radius: 50%; border: 10px double #c98b4f88; animation: spin 18s linear infinite; pointer-events: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .door.ike h2 { position: relative; }
+  .door.ike:hover h2::before, .door.ike:hover h2::after { content: attr(data-text); position: absolute; inset: 0; }
+  .door.ike:hover h2::before { color: #d1281f; animation: glitch .4s steps(2) infinite; clip-path: inset(0 0 55% 0); }
+  .door.ike:hover h2::after { color: #1f6fd1; animation: glitch .5s steps(2) infinite reverse; clip-path: inset(50% 0 0 0); }
+  @keyframes glitch { 0% { transform: translate(0) } 25% { transform: translate(-4px, 2px) } 50% { transform: translate(4px, -1px) } 75% { transform: translate(-2px, -2px) } 100% { transform: translate(3px, 1px) } }
+  .motion-on .door { opacity: 0; transform: translateY(40px); animation: rise 1s cubic-bezier(.2,.8,.2,1) forwards; }
+  .motion-on .door:nth-child(2) { animation-delay: .12s } .motion-on .door:nth-child(3) { animation-delay: .24s }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
   @media (max-width: 860px) {
     .doors { grid-template-columns: 1fr; }
     .door { min-height: 40vh; padding: 28px 20px; }
@@ -58,37 +80,38 @@
 <body>
   <header class="hub">
     <div class="wrap">
-      <h1>Tanatswa Mafume</h1>
+      <h1 data-split>Tanatswa Mafume</h1>
       <p>Engineer · Founder · Artist — Wichita, KS</p>
     </div>
   </header>
 
   <main class="doors">
-    <a class="door eng" href="engineering/">
+    <a class="door eng" href="engineering/" data-spot>
       <span class="grid-bg" aria-hidden="true"></span>
       <span class="num">01 — Engineering</span>
-      <div>
+      <div class="reveal-up">
         <h2>Industrial Engineering</h2>
         <p class="what">Projects from class, NIAR and the shop floor. Process improvement, quality, fabrication.</p>
         <span class="go">View portfolio</span>
       </div>
     </a>
 
-    <a class="door hh" href="hovehuru/">
+    <a class="door hh" href="hovehuru/" data-spot>
       <span class="glow" aria-hidden="true"></span>
+      <span class="ring" aria-hidden="true"></span>
       <span class="num">02 — The House</span>
-      <div>
+      <div class="reveal-up">
         <h2>Hove Huru</h2>
         <p class="what">A Zimbabwe-rooted luxury house. Copper bracelets, furniture and metalwork, made by hand.</p>
         <span class="go">Enter the shop</span>
       </div>
     </a>
 
-    <a class="door ike" href="ike/">
+    <a class="door ike" href="ike/" data-spot>
       <span class="num">03 — Art</span>
-      <div>
+      <div class="reveal-up">
         <span class="stamp">Members only</span>
-        <h2>Ike</h2>
+        <h2 data-text="Ike">Ike</h2>
         <p class="what">Art, the tattoo journey, and photography from life. Free access with your email.</p>
         <span class="go">Get access</span>
       </div>
@@ -104,5 +127,6 @@
 
 <script src="assets/config.js"></script>
 <script src="assets/site.js"></script>
+<script src="assets/motion.js"></script>
 </body>
 </html>

@@ -79,3 +79,20 @@ section.block { padding: 64px 0 0; }
   .about-grid { grid-template-columns: 1fr; gap: 28px; }
   .about-grid .portrait { position: static; max-width: 320px; }
 }
+
+/* ---- Motion: restrained on purpose — recruiters skim ---- */
+.hero { position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(360px circle at var(--mx, 70%) var(--my, 30%), #1f4e7914, transparent 70%); }
+.hero .wrap { position: relative; z-index: 1; }
+.card { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 14px 32px -18px #13202c55; border-color: var(--line-strong); }
+.card .ph, .card .media { transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.card > :first-child { overflow: hidden; }
+.card:hover .media { transform: scale(1.04); }
+.cap { border-top: 0; position: relative; }
+.cap::before { content: ""; position: absolute; left: 0; top: 0; height: 2px; width: 100%; background: var(--fg); transform-origin: 0 50%; transform: scaleX(0); transition: transform 1s cubic-bezier(.7,0,.2,1) var(--d, 0ms); }
+.cap.in::before, .motion-off .cap::before { transform: none; }
+.grid.fading { opacity: 0; transform: translateY(6px); }
+.grid { transition: opacity .25s ease, transform .25s ease; }
+.timeline li::before { transition: background .4s ease, transform .4s ease; }
+.timeline li:hover::before { background: var(--accent); transform: scale(1.2); }

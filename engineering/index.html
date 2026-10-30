@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="eng.css">
 </head>
 <body>
+  <div class="progress" data-progress aria-hidden="true"></div>
   <header class="topbar">
     <div class="wrap">
       <a class="brand" href="./">Tanatswa Mafume <span class="mono">/ IE</span></a>
@@ -25,22 +26,22 @@
   </header>
 
   <main>
-    <section class="hero">
+    <section class="hero" data-spot>
       <div class="wrap">
-        <p class="mono">Industrial Engineering · Wichita State University</p>
-        <h1>I find the bottleneck, then I build the fix.</h1>
-        <p class="lede">Industrial engineer with hands-on manufacturing experience — aerospace composites at NIAR, process improvement on a live production line, and a fabrication background in welding, CNC and water-jet.</p>
-        <div class="cta">
+        <p class="mono" data-reveal>Industrial Engineering · Wichita State University</p>
+        <h1 data-split>I find the bottleneck, then I build the fix.</h1>
+        <p class="lede" data-reveal style="--d:400ms">Industrial engineer with hands-on manufacturing experience — aerospace composites at NIAR, process improvement on a live production line, and a fabrication background in welding, CNC and water-jet.</p>
+        <div class="cta" data-reveal style="--d:550ms">
           <a class="btn" href="#projects">See the work</a>
           <a class="btn ghost" href="about.html">About me</a>
           <a class="btn ghost" data-resume="../" href="#">Download resume</a>
         </div>
 
-        <div class="stats">
-          <div class="stat"><b>B.S. Industrial Eng.</b><span>Expected Dec 2026</span></div>
-          <div class="stat"><b>NIAR</b><span>Composites tech since 2022</span></div>
-          <div class="stat"><b>Bosch</b><span>Senior design sponsor</span></div>
-          <div class="stat"><b>Shop-floor fluent</b><span>Weld · CNC · water-jet</span></div>
+        <div class="stats" data-reveal-stagger="90">
+          <div class="stat" data-reveal><b>B.S. Industrial Eng.</b><span>Expected Dec 2026</span></div>
+          <div class="stat" data-reveal><b>NIAR</b><span>Composites tech since 2022</span></div>
+          <div class="stat" data-reveal><b>Bosch</b><span>Senior design sponsor</span></div>
+          <div class="stat" data-reveal><b>Shop-floor fluent</b><span>Weld · CNC · water-jet</span></div>
         </div>
       </div>
     </section>
@@ -57,19 +58,19 @@
             <button type="button" data-f="Fabrication" aria-pressed="false">Fabrication</button>
           </div>
         </div>
-        <div class="grid" id="grid"></div>
+        <div class="grid" id="grid" data-reveal-stagger="60"></div>
       </div>
     </section>
 
     <section class="block">
       <div class="wrap">
         <div class="section-head"><h2>What I bring</h2></div>
-        <div class="caps">
-          <div class="cap"><h3>Process & operations</h3><ul><li>Process mapping & bottleneck analysis</li><li>Queueing & scheduling</li><li>Waste reduction & workflow improvement</li><li>Time & cost estimation</li></ul></div>
-          <div class="cap"><h3>Quality</h3><ul><li>Statistical process control</li><li>Capability analysis</li><li>Aerospace documentation standards</li></ul></div>
-          <div class="cap"><h3>Human factors & safety</h3><ul><li>Ergonomic workstation design</li><li>Anthropometry</li><li>ACGIH lifting guidance</li></ul></div>
-          <div class="cap"><h3>Manufacturing</h3><ul><li>Composite layup</li><li>Welding & steel fabrication</li><li>CNC & water-jet</li><li>Design for manufacture</li></ul></div>
-          <div class="cap"><h3>Data & systems</h3><ul><li>Relational database design</li><li>Microsoft Access & Excel</li><li>Data validation</li></ul></div>
+        <div class="caps" data-reveal-stagger="100">
+          <div class="cap" data-reveal><h3>Process & operations</h3><ul><li>Process mapping & bottleneck analysis</li><li>Queueing & scheduling</li><li>Waste reduction & workflow improvement</li><li>Time & cost estimation</li></ul></div>
+          <div class="cap" data-reveal><h3>Quality</h3><ul><li>Statistical process control</li><li>Capability analysis</li><li>Aerospace documentation standards</li></ul></div>
+          <div class="cap" data-reveal><h3>Human factors & safety</h3><ul><li>Ergonomic workstation design</li><li>Anthropometry</li><li>ACGIH lifting guidance</li></ul></div>
+          <div class="cap" data-reveal><h3>Manufacturing</h3><ul><li>Composite layup</li><li>Welding & steel fabrication</li><li>CNC & water-jet</li><li>Design for manufacture</li></ul></div>
+          <div class="cap" data-reveal><h3>Data & systems</h3><ul><li>Relational database design</li><li>Microsoft Access & Excel</li><li>Data validation</li></ul></div>
         </div>
       </div>
     </section>
@@ -85,6 +86,7 @@
 <script src="../assets/config.js"></script>
 <script src="../assets/site.js"></script>
 <script src="projects.js"></script>
+<script src="../assets/motion.js"></script>
 <script>
   (function () {
     const grid = document.getElementById("grid");
@@ -94,7 +96,7 @@
       const rows = [["Problem", p.problem], ["What I did", p.approach], ["Result", p.result]]
         .filter(([, v]) => v && v.trim())
         .map(([k, v]) => `<dt>${k}</dt><dd>${escapeHTML(v)}</dd>`).join("");
-      return `<article class="card${p.featured ? " featured" : ""}" data-type="${escapeHTML(p.type)}">
+      return `<article class="card${p.featured ? " featured" : ""}" data-type="${escapeHTML(p.type)}" data-reveal>
         ${mediaHTML(p.img, p.title, "Project photo")}
         <div class="body">
           <div class="meta"><span class="tag-type">${escapeHTML(p.type)}</span>${p.when ? `<span class="org">· ${escapeHTML(p.when)}</span>` : ""}</div>
@@ -107,14 +109,20 @@
       </article>`;
     }
 
-    function render(filter) {
-      grid.innerHTML = list.filter(p => filter === "All" || p.type === filter).map(card).join("");
+    function render(filter, animate) {
+      const paint = () => {
+        grid.innerHTML = list.filter(p => filter === "All" || p.type === filter).map(card).join("");
+        window.Motion && Motion.scan(grid);
+        grid.classList.remove("fading");
+      };
+      if (animate && !(window.Motion && Motion.reduce)) { grid.classList.add("fading"); setTimeout(paint, 220); }
+      else paint();
     }
 
     document.querySelectorAll(".filters button").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".filters button").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
-        render(btn.dataset.f);
+        render(btn.dataset.f, true);
       });
     });
     render("All");

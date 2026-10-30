@@ -79,6 +79,52 @@
   .book h2 { font-size: clamp(2rem, 5vw, 3.4rem); text-transform: uppercase; margin: 0; letter-spacing: -.02em; }
   .book .btn { background: #111; border-color: #111; color: #fff; font-family: var(--font-display); text-transform: uppercase; }
 
+  /* ---- Motion ---- */
+  .gate .left h1 { position: relative; }
+  .gate .left h1::before, .gate .left h1::after { content: attr(data-text); position: absolute; inset: 0; pointer-events: none; }
+  .motion-on .gate .left h1::before { color: #d1281f; mix-blend-mode: screen; animation: glitch 3.2s steps(1) infinite; }
+  .motion-on .gate .left h1::after { color: #2b6bff; mix-blend-mode: screen; animation: glitch 3.2s steps(1) infinite reverse .15s; }
+  @keyframes glitch {
+    0%, 86%, 100% { transform: none; clip-path: inset(0 0 100% 0); }
+    87% { transform: translate(-6px, 2px); clip-path: inset(10% 0 60% 0); }
+    90% { transform: translate(6px, -3px); clip-path: inset(55% 0 20% 0); }
+    93% { transform: translate(-3px, 1px); clip-path: inset(30% 0 45% 0); }
+    96% { transform: translate(4px, 0); clip-path: inset(70% 0 5% 0); }
+  }
+  .ink { position: absolute; width: 360px; aspect-ratio: 1; border-radius: 50%; left: 0; top: 0; pointer-events: none;
+         background: radial-gradient(circle, #d1281f 0%, #d1281f88 35%, transparent 70%); filter: blur(30px); opacity: .55; mix-blend-mode: screen;
+         transform: translate(var(--ix, 60%), var(--iy, 40%)) translate(-50%, -50%); transition: transform .9s cubic-bezier(.2,.8,.2,1); }
+  .gate .left > *:not(.ink) { position: relative; z-index: 1; }
+  .gate .left .stamp { align-self: flex-start; }
+  .gate form { animation: none; }
+  .motion-on .gate .right > * { opacity: 0; transform: translateY(20px); animation: up .8s cubic-bezier(.2,.8,.2,1) forwards; }
+  .motion-on .gate .right > *:nth-child(2) { animation-delay: .15s; }
+  @keyframes up { to { opacity: 1; transform: none; } }
+  .gate .btn { position: relative; overflow: hidden; }
+  .gate .btn::after { content: ""; position: absolute; inset: 0; background: #111; transform: translateY(101%); transition: transform .35s cubic-bezier(.7,0,.2,1); }
+  .gate .btn:hover::after { transform: none; }
+  .gate .btn > span { position: relative; z-index: 1; }
+
+  .band { overflow: hidden; background: var(--fg); color: var(--bg); padding: 12px 0; white-space: nowrap; }
+  .band .track { display: inline-flex; animation: slide 22s linear infinite; font-family: var(--font-display); font-size: 1.4rem; text-transform: uppercase; }
+  .band .track span { padding-right: 32px; }
+  .band .track span:nth-child(odd) { color: var(--accent); }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  .vault.opening { animation: open .9s cubic-bezier(.2,.8,.2,1); }
+  @keyframes open { from { clip-path: circle(0% at 50% 30%); } to { clip-path: circle(150% at 50% 30%); } }
+  .art-grid figure, .photo-grid figure { overflow: hidden; }
+  .art-grid figure > :first-child, .photo-grid figure > :first-child { transition: transform .9s cubic-bezier(.2,.8,.2,1), filter .6s ease; }
+  .art-grid figure:hover > :first-child, .photo-grid figure:hover > :first-child { transform: scale(1.06); }
+  .photo-grid .media { filter: grayscale(.6) contrast(1.05); }
+  .photo-grid figure:hover .media { filter: none; }
+  .art-grid figcaption, .photo-grid figcaption { transition: transform .4s ease; }
+  .art-grid figure:hover figcaption { transform: translateY(-4px); }
+  .step .n { transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+  .step:hover .n { transform: translateX(8px) rotate(-4deg); }
+  .book { position: relative; overflow: hidden; }
+  .book::before { content: "IKE IKE IKE IKE IKE IKE"; position: absolute; right: -2%; bottom: -30%; font-family: var(--font-display); font-size: 9rem; color: #ffffff14; white-space: nowrap; pointer-events: none; }
+
   @media (max-width: 860px) {
     .gate { grid-template-columns: 1fr; }
     .gate .left { min-height: 46vh; border-right: 0; border-bottom: 1px solid var(--line); padding: 40px 20px; }
@@ -104,9 +150,10 @@
 
   <!-- GATE: shown until the visitor gives an email -->
   <main class="gate" id="gate">
-    <div class="left">
+    <div class="left" id="gateLeft">
+      <span class="ink" aria-hidden="true"></span>
       <span class="stamp">Members only</span>
-      <h1>Ike</h1>
+      <h1 data-text="IKE">Ike</h1>
       <p>Art. Ink. Photographs from the life around it. The full archive is free — it just costs you an email.</p>
     </div>
     <div class="right">
@@ -117,7 +164,7 @@
         <label class="check"><input type="checkbox" name="adult" required> I'm 18 or older.</label>
         <label class="check"><input type="checkbox" name="updates" checked> Send me new drops, flash days and shoot openings.</label>
         <p class="err" id="gateErr" aria-live="polite"></p>
-        <button class="btn" type="submit">Unlock Ike</button>
+        <button class="btn" type="submit"><span>Unlock Ike</span></button>
         <p class="fine">No spam. Unsubscribe any time.</p>
       </form>
     </div>
@@ -128,29 +175,33 @@
     <section class="intro">
       <div class="wrap">
         <span class="stamp" id="welcome" style="margin-bottom:16px">Welcome</span>
-        <h1>Art.<br>Ink.<br>Life.</h1>
-        <p id="introText"></p>
+        <h1 data-reveal>Art.<br>Ink.<br>Life.</h1>
+        <p id="introText" data-reveal style="--d:200ms"></p>
       </div>
     </section>
+    <div class="band" aria-hidden="true"><div class="track">
+      <span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span><span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span>
+      <span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span><span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span>
+    </div></div>
     <nav class="tabs"><div class="wrap"><a href="#art">Art</a><a href="#ink">Tattoo journey</a><a href="#life">Photography</a></div></nav>
 
     <main class="wrap">
       <section class="part" id="art">
-        <div class="part-head"><h2>Art</h2><span class="mono">Paintings · Drawings · Flash</span></div>
-        <div class="art-grid" id="artGrid"></div>
+        <div class="part-head" data-reveal="wipe"><h2>Art</h2><span class="mono">Paintings · Drawings · Flash</span></div>
+        <div class="art-grid" id="artGrid" data-reveal-stagger="70"></div>
       </section>
 
       <section class="part" id="ink">
-        <div class="part-head"><h2>The Ink</h2><span class="mono">A tattoo journey</span></div>
-        <div class="journey" id="journey"></div>
+        <div class="part-head" data-reveal="wipe"><h2>The Ink</h2><span class="mono">A tattoo journey</span></div>
+        <div class="journey" id="journey" data-reveal-stagger="120"></div>
       </section>
 
       <section class="part" id="life">
-        <div class="part-head"><h2>Life</h2><span class="mono">Street · Portrait · Lifestyle</span></div>
-        <div class="photo-grid" id="photoGrid"></div>
+        <div class="part-head" data-reveal="wipe"><h2>Life</h2><span class="mono">Street · Portrait · Lifestyle</span></div>
+        <div class="photo-grid" id="photoGrid" data-reveal-stagger="60"></div>
       </section>
 
-      <section class="book">
+      <section class="book" data-reveal="scale">
         <h2>Book ink<br>or a shoot.</h2>
         <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
           <a class="btn" data-email href="#">Email Ike</a>
@@ -170,33 +221,46 @@
 <script src="../assets/config.js"></script>
 <script src="../assets/site.js"></script>
 <script src="content.js"></script>
+<script src="../assets/motion.js"></script>
 <script>
   (function () {
     const KEY = "ike_access";
     const gate = document.getElementById("gate");
     const vault = document.getElementById("vault");
 
-    function renderVault(name) {
+    function renderVault(name, animateOpen) {
       const d = window.IKE || {};
       document.getElementById("introText").textContent = d.intro || "";
       if (name) document.getElementById("welcome").textContent = "Welcome, " + name;
 
       document.getElementById("artGrid").innerHTML = (d.art || []).map(a =>
-        `<figure>${mediaHTML(a.img, a.title, "Artwork")}<figcaption>${escapeHTML(a.title)}${a.medium ? " · " + escapeHTML(a.medium) : ""}</figcaption></figure>`).join("");
+        `<figure data-reveal>${mediaHTML(a.img, a.title, "Artwork")}<figcaption>${escapeHTML(a.title)}${a.medium ? " · " + escapeHTML(a.medium) : ""}</figcaption></figure>`).join("");
 
       document.getElementById("journey").innerHTML = (d.tattoos || []).map((t, i) =>
-        `<article class="step">
+        `<article class="step" data-reveal>
           <div><div class="n">${String(i + 1).padStart(2, "0")}</div><div class="mono" style="margin-top:6px">${escapeHTML(t.when || "")}</div></div>
           <div><h3>${escapeHTML(t.title)}</h3><p>${escapeHTML(t.story || "")}</p></div>
           ${mediaHTML(t.img, t.title, "Tattoo photo")}
         </article>`).join("");
 
       document.getElementById("photoGrid").innerHTML = (d.photography || []).map(p =>
-        `<figure>${mediaHTML(p.img, p.title, "Photo")}<figcaption>${escapeHTML(p.title)}${p.place ? " · " + escapeHTML(p.place) : ""}</figcaption></figure>`).join("");
+        `<figure data-reveal>${mediaHTML(p.img, p.title, "Photo")}<figcaption>${escapeHTML(p.title)}${p.place ? " · " + escapeHTML(p.place) : ""}</figcaption></figure>`).join("");
 
       gate.hidden = true; gate.style.display = "none";
       vault.hidden = false;
+      if (animateOpen) { vault.classList.add("opening"); }
+      window.Motion && Motion.scan(vault);
       document.querySelectorAll(".vault-link").forEach(a => (a.hidden = false));
+    }
+
+    // Ink blob drifts toward the cursor on the gate panel
+    const left = document.getElementById("gateLeft");
+    if (left && !(window.Motion && Motion.reduce)) {
+      left.addEventListener("pointermove", e => {
+        const r = left.getBoundingClientRect();
+        left.style.setProperty("--ix", (e.clientX - r.left) + "px");
+        left.style.setProperty("--iy", (e.clientY - r.top) + "px");
+      });
     }
 
     // Returning visitor → straight in
@@ -214,11 +278,11 @@
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = "That email doesn't look right."; return; }
       if (!el.namedItem("adult").checked) { err.textContent = "You need to be 18+ to enter."; return; }
       err.textContent = "";
-      const btn = form.querySelector("button"); btn.disabled = true; btn.textContent = "Unlocking…";
+      const btn = form.querySelector("button"); btn.disabled = true; btn.firstElementChild.textContent = "Unlocking…";
       await submitLead({ name, email, updates: el.namedItem("updates").checked ? "yes" : "no", source: "Ike gate" });
       safeStore.set(KEY, JSON.stringify({ name, at: Date.now() }));
-      renderVault(name);
       window.scrollTo(0, 0);
+      renderVault(name, true);
     });
   })();
 </script>
