@@ -73,7 +73,8 @@
 
     // Torn horizontal slices.
     const slices = [];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 3; i++) setTimeout(() => {
+      if (!stage.isConnected || phase2) return;
       const top = Math.random() * 92, h = 2 + Math.random() * 9;
       const s = copy({ clipPath: `inset(${top}% 0 ${Math.max(0, 100 - top - h)}% 0)`, opacity: "0" });
       s.animate([
@@ -81,9 +82,9 @@
         { opacity: 1, transform: `translateX(${(Math.random() - 0.5) * 120}px)`, offset: 0.2 },
         { opacity: 1, transform: `translateX(${(Math.random() - 0.5) * 220}px)`, offset: 0.55 },
         { opacity: 0, transform: `translateX(${(Math.random() - 0.5) * 60}px)` }
-      ], { duration: 260 + Math.random() * 300, delay: 120 + Math.random() * 650, easing: "steps(3, end)", iterations: 2 });
+      ], { duration: 260 + Math.random() * 300, easing: "steps(3, end)", iterations: 2 });
       slices.push(s);
-    }
+    }, 140 + i * 230);
 
     // Scanlines, noise blocks and flicker.
     const scan = document.createElement("div");
@@ -119,17 +120,26 @@
     word.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }, { opacity: 1 }, { opacity: 0.2 }, { opacity: 1 }, { opacity: 0 }],
       { duration: 700, delay: 420, easing: "steps(1, end)", fill: "forwards" });
 
+    // ---------- Phase 2 prep: build the vortex rings gradually while the glitch plays ----------
+    let phase2 = false;
+    const reach = Math.hypot(Math.max(cx, W - cx), Math.max(cy, H - cy)) + 20;
+    const RINGS = 7, rings = [];
+    for (let i = 0; i < RINGS; i++) setTimeout(() => {
+      const r0 = (reach * i) / RINGS, r1 = (reach * (i + 1)) / RINGS + 1;
+      const mask = `radial-gradient(circle at ${cx}px ${cy}px, transparent ${r0}px, #000 ${r0 + 0.5}px, #000 ${r1}px, transparent ${r1 + 0.5}px)`;
+      const ring = copy({ maskImage: mask, WebkitMaskImage: mask, transformOrigin: `${cx}px ${cy}px`, opacity: "0.001", zIndex: "-1" });
+      rings[i] = ring;
+    }, 120 + i * 100);
+
     // ---------- Phase 2: vortex (~950 – 1900ms) ----------
     setTimeout(() => {
+      phase2 = true;
       [base, ...slices, scan, blocks, flash].forEach(n => n.remove()); clearInterval(chroma);
       stage.style.background = `radial-gradient(circle at ${cx}px ${cy}px, #000 0, #000 6%, #1a0408 22%, #05070d 60%, #000 100%)`;
-      const reach = Math.hypot(Math.max(cx, W - cx), Math.max(cy, H - cy)) + 20;
-      const RINGS = 7;
       for (let i = 0; i < RINGS; i++) {
-        // Ring i covers radius [r0, r1]; inner rings spin faster (like water down a drain).
-        const r0 = (reach * i) / RINGS, r1 = (reach * (i + 1)) / RINGS + 1;
-        const mask = `radial-gradient(circle at ${cx}px ${cy}px, transparent ${r0}px, #000 ${r0 + 0.5}px, #000 ${r1}px, transparent ${r1 + 0.5}px)`;
-        const ring = copy({ maskImage: mask, WebkitMaskImage: mask, transformOrigin: `${cx}px ${cy}px` });
+        const ring = rings[i];
+        if (!ring) continue;
+        ring.style.opacity = "1"; ring.style.zIndex = "";
         const spin = 260 + (RINGS - i) * 70;
         const dir = i % 2 ? 1 : 1; // same direction reads as one swirl
         ring.animate([
