@@ -48,6 +48,17 @@
   .intro { padding: 64px 0 40px; border-bottom: 1px solid var(--line); }
   .intro h1 { font-size: clamp(3rem, 9vw, 7rem); text-transform: uppercase; letter-spacing: -.04em; line-height: .9; margin: 0 0 20px; }
   .intro p { font-size: 1.2rem; max-width: 52ch; }
+  /* Intro with the silent video reel behind it */
+  .intro.has-reel { position: relative; overflow: hidden; padding: 0; border-bottom: 0; background: #0c0c0c; color: #f1ede6; min-height: clamp(440px, 72vh, 760px); display: flex; align-items: flex-end; }
+  .intro.has-reel .reel { position: absolute; inset: 0; }
+  .intro.has-reel .reel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+  .intro.has-reel .reel video.on { opacity: 1; }
+  .intro.has-reel .reel-ink { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; overflow: visible; }
+  .intro.has-reel::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(180deg, #0c0c0c66 0%, transparent 30%, transparent 45%, #0c0c0cee 100%); }
+  .intro.has-reel .wrap { position: relative; z-index: 4; padding: 120px 0 36px; }
+  .intro.has-reel h1 { color: #fff; text-shadow: 0 4px 30px #000a; }
+  .intro.has-reel p { color: #e9e4dc; text-shadow: 0 2px 14px #000; }
+  @media (max-width: 640px) { .intro.has-reel { min-height: 62vh; } .intro.has-reel .wrap { padding-top: 90px; } }
   .tabs { position: sticky; top: 61px; z-index: 40; background: var(--bg); border-bottom: 1px solid var(--line); }
   .tabs .wrap { display: flex; gap: 0; overflow-x: auto; }
   .tabs a { font-family: var(--font-display); text-transform: uppercase; text-decoration: none; padding: 14px 18px; border-right: 1px solid var(--line); white-space: nowrap; }
@@ -307,7 +318,8 @@
 
   <!-- VAULT: rendered after unlock -->
   <div class="vault" id="vault" hidden>
-    <section class="intro">
+    <section class="intro" id="introSec">
+      <div class="reel" id="reel" aria-hidden="true"></div>
       <div class="wrap">
         <span class="stamp" id="welcome" style="margin-bottom:16px">Welcome</span>
         <h1 data-reveal>Art.<br>Ink.<br>Life.</h1>
@@ -394,6 +406,7 @@
 <script src="../data/text.js"></script>
 <script src="../assets/bind.js"></script>
 <script src="content.js"></script>
+<script src="../assets/inkreel.js"></script>
 <script src="../assets/motion.js"></script>
 <script>
   (function () {
@@ -423,6 +436,11 @@
           <video src="${r.video}" poster="${r.poster || ""}" controls playsinline preload="none"></video>
           <figcaption>${r.quote ? `<blockquote>“${escapeHTML(r.quote)}”</blockquote>` : ""}${escapeHTML([r.name, r.piece].filter(Boolean).join(" · ") || "Client review")}</figcaption>
         </figure>`).join("");
+
+      if ((d.reel || []).some(r => r && r.video) && window.InkReel) {
+        document.getElementById("introSec").classList.add("has-reel");
+        InkReel.start(document.getElementById("reel"), d.reel);
+      } else { const r = document.getElementById("reel"); if (r) r.remove(); }
 
       document.getElementById("photoGrid").innerHTML = (d.photography || []).map(p =>
         `<figure data-reveal>${mediaHTML(p.img, p.title, "Photo")}<figcaption>${escapeHTML(p.title)}${p.place ? " · " + escapeHTML(p.place) : ""}</figcaption></figure>`).join("");

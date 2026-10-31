@@ -368,6 +368,12 @@
       ["art", "tattoos", "photography"].forEach(k => (I[k] = I[k] || []));
       return [
         textCard("Email gate", "What visitors see before they enter.", [["ike.gateText", "Gate text", "long"], ["ike.gateTitle", "Form title"], ["ike.gateFine", "Small print", "wide"]]),
+        el("section", { class: "card" }, el("h2", { text: "Top video reel" }),
+          el("p", { class: "sub", text: "Silent clips that loop behind “Art. Ink. Life.” with an ink-splatter transition between each. Short clips (3–8 s) work best. Sound is never played." }),
+          listEditor("IKE", () => (I.reel = I.reel || []), [
+            { key: "video", label: "Video", type: "video", folder: "images/ike" },
+            { key: "poster", label: "Poster (first frame)", type: "image", folder: "images/ike" }
+          ], { title: r => (r.video || "").split("/").pop() || "Clip", img: r => r.poster, blank: { video: "", poster: "" }, addLabel: "Add clip" })),
         el("section", { class: "card" }, el("h2", { text: "Intro" }),
           el("div", { class: "grid2" }, textField("Intro paragraph (after unlocking)", () => I.intro, v => { I.intro = v; touch("IKE"); }, { multi: true, full: true }))),
         el("section", { class: "card" }, el("h2", { text: "Tattoo pieces (Archive + Featured)" }),

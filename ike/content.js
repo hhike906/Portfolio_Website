@@ -11,6 +11,13 @@
 window.IKE = {
   intro: "Ike is where the work stops being polite. Paintings, flash, the tattoos — mine and the ones I've put on other people — and photographs of the life around them.",
 
+  // Silent reel that loops behind "Art. Ink. Life." at the top of the vault (ink-splatter transitions).
+  reel: [
+    { video: "../images/ike/reel-01.mp4", poster: "../images/ike/reel-01.jpg" },
+    { video: "../images/ike/reel-02.mp4", poster: "../images/ike/reel-02.jpg" },
+    { video: "../images/ike/reel-03.mp4", poster: "../images/ike/reel-03.jpg" }
+  ],
+
   // Every tattoo piece. ALL of them appear in the Archive grid; the ones with featured: true
   // also get a big interactive deck in the Featured section at the top.
   // cover = the image people play with; shots = everything that opens when they click it.
