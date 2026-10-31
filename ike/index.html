@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600&family=Space+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/base.css">
+<script>try{if(sessionStorage.getItem("arrive-from-vortex")){sessionStorage.removeItem("arrive-from-vortex");document.documentElement.classList.add("from-vortex");}}catch(e){}</script>
 <style>
   :root {
     --bg: #f1ede6; --fg: #111; --muted: #6d675f;
@@ -78,6 +79,17 @@
   .book { margin-top: 80px; background: var(--accent); color: #fff; padding: 48px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
   .book h2 { font-size: clamp(2rem, 5vw, 3.4rem); text-transform: uppercase; margin: 0; letter-spacing: -.02em; }
   .book .btn { background: #111; border-color: #111; color: #fff; font-family: var(--font-display); text-transform: uppercase; }
+
+  /* ---- Arriving out of the vortex from the home page ---- */
+  .from-vortex body { animation: spitout .9s cubic-bezier(.2,.9,.25,1) both; transform-origin: 50% 45%; }
+  @keyframes spitout {
+    0% { transform: scale(.05) rotate(-200deg); opacity: 0; filter: blur(6px) hue-rotate(90deg); }
+    55% { transform: scale(1.04) rotate(6deg); opacity: 1; filter: blur(0) hue-rotate(0deg); }
+    100% { transform: none; opacity: 1; filter: none; }
+  }
+  .from-vortex body::after { content: ""; position: fixed; inset: 0; z-index: 999; pointer-events: none; mix-blend-mode: screen;
+    background: linear-gradient(90deg, #ff1f3d55, transparent 30%, transparent 70%, #1fb8ff55); animation: chroma .7s steps(4, end) .5s both; }
+  @keyframes chroma { 0% { opacity: 1; transform: translateX(-12px); } 50% { opacity: .8; transform: translateX(10px); } 100% { opacity: 0; transform: none; } }
 
   /* ---- Motion ---- */
   .gate .left h1 { position: relative; }
