@@ -370,10 +370,13 @@
         textCard("Email gate", "What visitors see before they enter.", [["ike.gateText", "Gate text", "long"], ["ike.gateTitle", "Form title"], ["ike.gateFine", "Small print", "wide"]]),
         el("section", { class: "card" }, el("h2", { text: "Intro" }),
           el("div", { class: "grid2" }, textField("Intro paragraph (after unlocking)", () => I.intro, v => { I.intro = v; touch("IKE"); }, { multi: true, full: true }))),
-        el("section", { class: "card" }, el("h2", { text: "Featured pieces" }),
-          el("p", { class: "sub", text: "Each piece gets its own interactive deck at the top of Ike. Clicking it opens its photos and videos. Order here is the order on the page." }),
+        el("section", { class: "card" }, el("h2", { text: "Tattoo pieces (Archive + Featured)" }),
+          el("p", { class: "sub", text: "Every piece here shows in the Archive grid. Tick Featured to also give it a big interactive deck at the top. Order here is the order on the page — put newest first." }),
           listEditor("IKE", () => I.pieces, [
             { key: "title", label: "Title" }, { key: "note", label: "Short note" },
+            { key: "placement", label: "Placement (e.g. Upper back)" }, { key: "style", label: "Style (e.g. Fine line) — used for Archive filters" },
+            { key: "date", label: "Date (e.g. Aug 2026)" },
+            { key: "featured", label: "Featured — big interactive deck at the top (it's always in the Archive)", type: "bool" },
             { key: "cover", label: "Cover photo", type: "image", folder: "images/ike" },
             { key: "shots", label: "Photos & videos", type: "list",
               hint: "Photo: upload under Photo and set the tattoo position. Video: upload under Video (MP4, keep it under ~25 MB) plus a Poster photo for the thumbnail.",
@@ -385,8 +388,8 @@
                 { key: "focus", label: "Tattoo position (photos)", type: "focus", hint: "x %, y %, zoom — e.g. “50, 74, 2” = centre, 74% down, 2× zoom. Empty = centre." }
               ],
               opts: { title: x => x.caption || (x.video ? "Video" : "Photo"), sub: x => (x.video ? "video" : "photo"), img: x => x.img || x.poster, blank: { img: "", caption: "" }, addLabel: "Add photo or video" } }
-          ], { title: p => p.title, sub: p => `${(p.shots || []).length} item${(p.shots || []).length === 1 ? "" : "s"}`, img: p => p.cover,
-               blank: { title: "New piece", note: "", cover: "", shots: [] }, addLabel: "Add piece" })),
+          ], { title: p => p.title, sub: p => [p.featured ? "★ featured" : "", p.style, `${(p.shots || []).length} item${(p.shots || []).length === 1 ? "" : "s"}`].filter(Boolean).join(" · "), img: p => p.cover,
+               blank: { title: "New piece", note: "", placement: "", style: "", date: "", featured: false, cover: "", shots: [] }, addLabel: "Add tattoo piece" })),
         el("section", { class: "card" }, el("h2", { text: "Client reviews" }),
           el("p", { class: "sub", text: "Video reviews shown above the “Book ink” button. Upload the video and a poster photo; the quote and name are optional." }),
           listEditor("IKE", () => (I.reviews = I.reviews || []), [

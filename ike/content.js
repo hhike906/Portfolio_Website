@@ -11,7 +11,8 @@
 window.IKE = {
   intro: "Ike is where the work stops being polite. Paintings, flash, the tattoos — mine and the ones I've put on other people — and photographs of the life around them.",
 
-  // Featured pieces at the top of the vault — each gets its own interactive deck.
+  // Every tattoo piece. ALL of them appear in the Archive grid; the ones with featured: true
+  // also get a big interactive deck in the Featured section at the top.
   // cover = the image people play with; shots = everything that opens when they click it.
   // A shot can be a photo (img) or a video (video + poster).
   // focus = where the tattoo is in a photo (x/y in % from the top-left), how far to zoom,
@@ -19,6 +20,7 @@ window.IKE = {
   pieces: [
   {
     title: "Luna Moth",
+    featured: true, placement: "Upper back", style: "Fine line", date: "2026",
     note: "Fine line, between the shoulder blades — and what she thought of it.",
     cover: "../images/ike/luna-moth-01.jpg",
     shots: [
@@ -28,6 +30,7 @@ window.IKE = {
   },
   {
     title: "Red Orchid Vine",
+    featured: true, placement: "Lower back", style: "Fine line + colour", date: "Aug 2026",
     note: "Fine line + red, across the lower back.",
     cover: "../images/ike/tattoo-01.jpg",
     shots: [
