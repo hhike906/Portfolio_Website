@@ -13,23 +13,24 @@ window.IKE = {
 
   // The interactive "featured" piece at the top of the vault.
   // cover = the image people play with; shots = everything that opens when they click it.
+  // focus = where the tattoo is in each photo (x/y in % from the top-left) and how far to zoom in on it.
   featured: {
     title: "Red Orchid Vine",
     note: "Fine line + red, across the lower back.",
     cover: "../images/ike/tattoo-01.jpg",
     shots: [
-      { img: "../images/ike/tattoo-01.jpg", caption: "Red Orchid Vine" },
-      { img: "../images/ike/tattoo-09.jpg", caption: "The vine, up close" },
-      { img: "../images/ike/tattoo-02.jpg", caption: "Full span" },
-      { img: "../images/ike/tattoo-03.jpg", caption: "Settled in" },
-      { img: "../images/ike/tattoo-04.jpg", caption: "Standing" },
-      { img: "../images/ike/tattoo-05.jpg", caption: "Kneeling" },
-      { img: "../images/ike/tattoo-06.jpg", caption: "Back view" },
-      { img: "../images/ike/tattoo-07.jpg", caption: "Over the shoulder" },
-      { img: "../images/ike/tattoo-08.jpg", caption: "Side light" },
-      { img: "../images/ike/tattoo-10.jpg", caption: "Line and shadow" },
-      { img: "../images/ike/tattoo-11.jpg", caption: "Low light" },
-      { img: "../images/ike/tattoo-12.jpg", caption: "Final" }
+      { img: "../images/ike/tattoo-01.jpg", caption: "Red Orchid Vine", focus: { x: 50, y: 74, zoom: 1.9, w: 0.8, h: 0.12 } },
+      { img: "../images/ike/tattoo-09.jpg", caption: "The vine, up close", focus: { x: 25, y: 50, zoom: 1.25, w: 0.12, h: 0.85 } },
+      { img: "../images/ike/tattoo-02.jpg", caption: "Full span", focus: { x: 52, y: 33, zoom: 1.9, w: 0.6, h: 0.12 } },
+      { img: "../images/ike/tattoo-03.jpg", caption: "Settled in", focus: { x: 42, y: 45, zoom: 1.9, w: 0.5, h: 0.15 } },
+      { img: "../images/ike/tattoo-04.jpg", caption: "Standing", focus: { x: 50, y: 43, zoom: 2.2, w: 0.35, h: 0.08 } },
+      { img: "../images/ike/tattoo-05.jpg", caption: "Kneeling", focus: { x: 50, y: 62, zoom: 2.6, w: 0.5, h: 0.07 } },
+      { img: "../images/ike/tattoo-06.jpg", caption: "Back view", focus: { x: 50, y: 74, zoom: 2.5, w: 0.5, h: 0.07 } },
+      { img: "../images/ike/tattoo-07.jpg", caption: "Over the shoulder", focus: { x: 58, y: 80, zoom: 2.3, w: 0.55, h: 0.08 } },
+      { img: "../images/ike/tattoo-08.jpg", caption: "Side light", focus: { x: 35, y: 50, zoom: 1.25, w: 0.12, h: 0.85 } },
+      { img: "../images/ike/tattoo-10.jpg", caption: "Line and shadow", focus: { x: 26, y: 50, zoom: 1.25, w: 0.12, h: 0.85 } },
+      { img: "../images/ike/tattoo-11.jpg", caption: "Low light", focus: { x: 26, y: 50, zoom: 1.25, w: 0.12, h: 0.85 } },
+      { img: "../images/ike/tattoo-12.jpg", caption: "Final", focus: { x: 50, y: 71, zoom: 2.4, w: 0.65, h: 0.08 } }
     ]
   },
 

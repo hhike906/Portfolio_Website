@@ -234,6 +234,9 @@
       case "bool": return boolField(f.label, get, set, { onchange });
       case "image": return imageField(f.label, f.folder, get, set, { onchange });
       case "price": return textField(f.label, () => (obj[f.key] == null ? "" : obj[f.key]), v => { const n = parseFloat(v); obj[f.key] = v.trim() === "" || isNaN(n) ? null : n; touch(global); }, { inputmode: "decimal", hint: f.hint || "Leave empty for “Price on request”", onchange });
+      case "focus": return textField(f.label, () => { const v = obj[f.key] || {}; return v.x == null ? "" : `${v.x}, ${v.y}, ${v.zoom == null ? 1.8 : v.zoom}`; },
+        v => { const n = v.split(/[ ,]+/).map(parseFloat).filter(x => !isNaN(x)); obj[f.key] = n.length >= 2 ? Object.assign({}, obj[f.key], { x: n[0], y: n[1], zoom: n[2] || 1.8 }) : undefined; touch(global); },
+        { hint: f.hint, onchange });
       case "tags": return textField(f.label, () => (obj[f.key] || []).join(", "), v => { obj[f.key] = v.split(",").map(s => s.trim()).filter(Boolean); touch(global); }, { hint: "Separate with commas", full: true, onchange });
       default: return textField(f.label, get, set, { full: f.full, hint: f.hint, placeholder: f.placeholder, onchange });
     }
@@ -368,7 +371,8 @@
             imageField("Cover photo", "images/ike", () => I.featured.cover, v => { I.featured.cover = v; touch("IKE"); })),
           el("h2", { text: "Gallery photos", style: "margin-top:18px" }),
           listEditor("IKE", () => I.featured.shots, [
-            { key: "img", label: "Photo", type: "image", folder: "images/ike" }, { key: "caption", label: "Caption", full: true }
+            { key: "img", label: "Photo", type: "image", folder: "images/ike" }, { key: "caption", label: "Caption" },
+            { key: "focus", label: "Tattoo position", type: "focus", hint: "x %, y %, zoom — e.g. “50, 74, 2” = centre, 74% down, 2× zoom. Empty = centre." }
           ], { title: s => s.caption, img: s => s.img, blank: { img: "", caption: "" }, addLabel: "Add photo" })),
         el("section", { class: "card" }, el("h2", { text: "Art" }),
           listEditor("IKE", () => I.art, [

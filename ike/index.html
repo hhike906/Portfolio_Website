@@ -164,12 +164,17 @@
   .lb .bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; font-family: var(--mono); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
   .lb .x { background: none; border: 2px solid #f1ede6; color: #f1ede6; width: 44px; height: 44px; font-size: 1.3rem; cursor: pointer; }
   .lb .x:hover { background: var(--accent); border-color: var(--accent); }
-  .lb .viewport { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; }
-  .lb .track { display: flex; height: 100%; width: 100%; transition: transform .55s cubic-bezier(.2,.8,.2,1); will-change: transform; }
-  .lb .slide { flex: 0 0 100%; height: 100%; display: grid; place-items: center; padding: 8px 60px; }
-  .lb .slide img { max-width: 100%; max-height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s; transform: scale(.86); opacity: .35; cursor: zoom-in; }
-  .lb .slide.cur img { transform: scale(1); opacity: 1; }
-  .lb .slide.cur img.zoomed { transform: scale(2); cursor: zoom-out; }
+  .lb .viewport { flex: 1; min-height: 0; position: relative; overflow: hidden; }
+  .lb .stagebox { position: absolute; inset: 0 64px; overflow: hidden; touch-action: none; cursor: grab; }
+  .lb .stagebox.panning { cursor: grabbing; }
+  .lb .stagebox img { position: absolute; left: 0; top: 0; max-width: none; transform-origin: 0 0; user-select: none; -webkit-user-drag: none; will-change: transform; opacity: 0; transition: opacity .25s ease; }
+  .lb .stagebox img.ready { opacity: 1; }
+  .lb .stagebox img.anim { transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .25s ease; }
+  .lb .tools { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 3; display: flex; gap: 6px; align-items: center; background: #0c0c0ccc; padding: 6px; border: 1px solid #ffffff22; }
+  .lb .tools button { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; background: transparent; color: #f1ede6; border: 1px solid #ffffff44; padding: 8px 12px; min-height: 38px; cursor: pointer; }
+  .lb .tools button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); }
+  .lb .tools .zoomb { width: 38px; padding: 0; font-size: 1rem; }
+  .lb .hint { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 3; font-family: var(--mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #f1ede6aa; pointer-events: none; transition: opacity .6s; width: 92%; text-align: center; }
   .lb .arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 52px; height: 52px; border: 2px solid #f1ede6; background: #0c0c0c99; color: #f1ede6; font-size: 1.4rem; cursor: pointer; }
   .lb .arrow:hover { background: var(--accent); border-color: var(--accent); }
   .lb .prev { left: 10px; } .lb .next { right: 10px; }
@@ -181,7 +186,7 @@
   @media (max-width: 860px) {
     .featured { grid-template-columns: 1fr; gap: 40px; }
     .deck { max-width: 360px; margin: 0 auto; }
-    .lb .slide { padding: 8px 8px; }
+    .lb .stagebox { inset: 0; }
     .lb .arrow { display: none; }
   }
 
@@ -294,7 +299,14 @@
     <div class="bar"><span id="lbCount">1 / 1</span><span>IKE</span><button class="x" id="lbClose" aria-label="Close gallery">✕</button></div>
     <div class="viewport" id="lbView">
       <button class="arrow prev" id="lbPrev" aria-label="Previous">←</button>
-      <div class="track" id="lbTrack"></div>
+      <div class="stagebox" id="lbStage"><img id="lbImg" alt="" draggable="false"></div>
+      <span class="hint" id="lbHint">Drag to look around · pinch or scroll to zoom · double-tap to switch</span>
+      <div class="tools">
+        <button type="button" id="lbFocus" aria-pressed="true">Tattoo</button>
+        <button type="button" id="lbFull" aria-pressed="false">Full photo</button>
+        <button type="button" class="zoomb" id="lbOut" aria-label="Zoom out">−</button>
+        <button type="button" class="zoomb" id="lbIn" aria-label="Zoom in">+</button>
+      </div>
       <button class="arrow next" id="lbNext" aria-label="Next">→</button>
     </div>
     <div class="cap" id="lbCap"></div>
@@ -426,20 +438,58 @@
     deck.addEventListener("pointerup", endPress);
     deck.addEventListener("pointercancel", endPress);
 
-    // ---------- Lightbox ----------
-    const lb = document.getElementById("lb"), track = document.getElementById("lbTrack"), thumbs = document.getElementById("lbThumbs");
+    // ---------- Lightbox: zoom / pan viewer, framed on the tattoo ----------
+    const lb = document.getElementById("lb"), thumbs = document.getElementById("lbThumbs");
     const cap = document.getElementById("lbCap"), count = document.getElementById("lbCount");
-    track.innerHTML = shots.map((s, i) => `<div class="slide"><img src="${s.img}" alt="${escapeHTML(s.caption || "")}" draggable="false"></div>`).join("");
+    const stageEl = document.getElementById("lbStage"), img = document.getElementById("lbImg"), hint = document.getElementById("lbHint");
+    const bFocus = document.getElementById("lbFocus"), bFull = document.getElementById("lbFull");
     thumbs.innerHTML = shots.map((s, i) => `<button style="background-image:url(${s.img})" aria-label="Show ${i + 1}"></button>`).join("");
     let cur = 0, lastFocus = null;
+    let iw = 1, ih = 1, vw = 1, vh = 1, fit = 1, sc = 1, tx = 0, ty = 0, mode = "focus";
 
-    function go(i, instant) {
+    const focusOf = s => {
+      const f = s.focus || {};
+      // w/h = how much of the photo the tattoo covers (0–1); the zoom never crops past it.
+      return { x: f.x == null ? 50 : +f.x, y: f.y == null ? 55 : +f.y, zoom: f.zoom == null ? 1.8 : +f.zoom, w: f.w || 0.55, h: f.h || 0.3 };
+    };
+    function measure() {
+      const r = stageEl.getBoundingClientRect(); vw = r.width || 1; vh = r.height || 1;
+      fit = Math.min(vw / iw, vh / ih) * 0.97;
+    }
+    function clamp() {
+      const w = iw * sc, h = ih * sc;
+      tx = w <= vw ? (vw - w) / 2 : Math.min(0, Math.max(vw - w, tx));
+      ty = h <= vh ? (vh - h) / 2 : Math.min(0, Math.max(vh - h, ty));
+    }
+    function apply(animate) {
+      clamp();
+      img.classList.toggle("anim", !!animate);
+      img.style.transform = `translate(${tx}px, ${ty}px) scale(${sc})`;
+      bFocus.setAttribute("aria-pressed", String(mode === "focus"));
+      bFull.setAttribute("aria-pressed", String(mode === "full"));
+    }
+    function centreOn(px, py, s) { sc = s; tx = vw / 2 - px * sc; ty = vh / 2 - py * sc; }
+    function showFocus(animate) {
+      const f = focusOf(shots[cur]); mode = "focus";
+      const cap = Math.min(vw * 0.94 / (f.w * iw), vh * 0.94 / (f.h * ih));   // keep the whole tattoo on screen
+      centreOn(f.x / 100 * iw, f.y / 100 * ih, Math.max(fit, Math.min(fit * f.zoom, cap))); apply(animate);
+    }
+    function showFull(animate) { mode = "full"; centreOn(iw / 2, ih / 2, fit); apply(animate); }
+    function zoomAt(ns, px, py, animate) {
+      ns = Math.min(fit * 6, Math.max(fit, ns));
+      const ix = (px - tx) / sc, iy = (py - ty) / sc;
+      sc = ns; tx = px - ix * sc; ty = py - iy * sc; mode = ns <= fit * 1.01 ? "full" : "free"; apply(animate);
+    }
+
+    function go(i) {
       cur = (i + shots.length) % shots.length;
-      track.style.transition = instant ? "none" : "";
-      track.style.transform = `translateX(${-cur * 100}%)`;
-      track.querySelectorAll(".slide").forEach((el, k) => { el.classList.toggle("cur", k === cur); el.querySelector("img").classList.remove("zoomed"); });
+      const s = shots[cur];
+      img.classList.remove("ready");
+      img.onload = () => { iw = img.naturalWidth; ih = img.naturalHeight; img.style.width = iw + "px"; img.style.height = ih + "px"; measure(); showFocus(false); requestAnimationFrame(() => img.classList.add("ready")); };
+      img.src = s.img; img.alt = s.caption || "";
       thumbs.querySelectorAll("button").forEach((b, k) => b.setAttribute("aria-current", String(k === cur)));
-      cap.textContent = shots[cur].caption || "";
+      const tb = thumbs.children[cur]; if (tb && tb.scrollIntoView) tb.scrollIntoView({ block: "nearest", inline: "center" });
+      cap.textContent = s.caption || "";
       count.textContent = `${cur + 1} / ${shots.length}`;
     }
 
@@ -447,24 +497,23 @@
       if (pressed) return;
       lastFocus = document.activeElement;
       const r = front.getBoundingClientRect();
-      // Burst: copies of the deck's cards fly out and fan across the screen, then the gallery appears.
-      const flyers = shots.slice(0, 6).map((s, i) => {
+      const flyers = shots.slice(0, 6).map(s => {
         const f = document.createElement("div");
         f.className = "burst";
         Object.assign(f.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px", backgroundImage: `url(${s.img})` });
         lb.appendChild(f);
         return f;
       });
-      go(0, true);
       lb.classList.add("open");
       document.body.style.overflow = "hidden";
+      go(0);
+      hint.style.opacity = "1"; setTimeout(() => (hint.style.opacity = "0"), 3500);
       if (reduce) { flyers.forEach(f => f.remove()); document.getElementById("lbClose").focus(); return; }
-      const cx = innerWidth / 2 - (r.left + r.width / 2), cy = innerHeight / 2 - (r.top + r.height / 2);
-      const n = flyers.length;
+      const cx = innerWidth / 2 - (r.left + r.width / 2), cy = innerHeight / 2 - (r.top + r.height / 2), n = flyers.length;
       lb.animate([{ backgroundColor: "rgba(12,12,12,0)" }, { backgroundColor: "rgba(12,12,12,1)" }], { duration: 450, easing: "ease-out" });
-      track.animate([{ opacity: 0, transform: `translateX(0) scale(.9)` }, { opacity: 1, transform: `translateX(0) scale(1)` }], { duration: 400, delay: 520, easing: "ease-out", fill: "backwards" });
+      stageEl.animate([{ opacity: 0, transform: "scale(.94)" }, { opacity: 1, transform: "scale(1)" }], { duration: 400, delay: 520, easing: "ease-out", fill: "backwards" });
       flyers.forEach((f, i) => {
-        const spread = (i - (n - 1) / 2);
+        const spread = i - (n - 1) / 2;
         f.animate([
           { transform: "translate(0,0) rotate(0) scale(1)", opacity: 1 },
           { transform: `translate(${cx + spread * Math.min(150, innerWidth / (n + 1))}px, ${cy + Math.abs(spread) * 18}px) rotate(${spread * 9}deg) scale(.62)`, opacity: 1, offset: .55 },
@@ -473,11 +522,7 @@
       });
       setTimeout(() => document.getElementById("lbClose").focus(), 50);
     }
-    function close() {
-      lb.classList.remove("open");
-      document.body.style.overflow = "";
-      if (lastFocus) lastFocus.focus();
-    }
+    function close() { lb.classList.remove("open"); document.body.style.overflow = ""; if (lastFocus) lastFocus.focus(); }
 
     deck.addEventListener("click", open);
     deck.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
@@ -485,40 +530,80 @@
     document.getElementById("lbPrev").addEventListener("click", () => go(cur - 1));
     document.getElementById("lbNext").addEventListener("click", () => go(cur + 1));
     thumbs.addEventListener("click", e => { const b = e.target.closest("button"); if (b) go([...thumbs.children].indexOf(b)); });
-    track.addEventListener("click", e => { const img = e.target.closest(".slide.cur img"); if (img && !dragMoved) img.classList.toggle("zoomed"); });
+    bFocus.addEventListener("click", () => showFocus(true));
+    bFull.addEventListener("click", () => showFull(true));
+    document.getElementById("lbIn").addEventListener("click", () => zoomAt(sc * 1.5, vw / 2, vh / 2, true));
+    document.getElementById("lbOut").addEventListener("click", () => zoomAt(sc / 1.5, vw / 2, vh / 2, true));
+    addEventListener("resize", () => { if (!lb.classList.contains("open")) return; measure(); mode === "full" ? showFull(false) : mode === "focus" ? showFocus(false) : apply(false); });
     document.addEventListener("keydown", e => {
       if (!lb.classList.contains("open")) return;
       if (e.key === "Escape") close();
       if (e.key === "ArrowRight") go(cur + 1);
       if (e.key === "ArrowLeft") go(cur - 1);
+      if (e.key === "+" || e.key === "=") zoomAt(sc * 1.4, vw / 2, vh / 2, true);
+      if (e.key === "-") zoomAt(sc / 1.4, vw / 2, vh / 2, true);
+      if (e.key === "0") showFull(true);
     });
 
-    // Swipe left/right to move, swipe down to close.
-    let sx = 0, sy = 0, dx = 0, dy = 0, dragging = false, dragMoved = false;
-    const view = document.getElementById("lbView");
-    view.addEventListener("pointerdown", e => {
-      if (e.target.closest(".arrow")) return;
-      dragging = true; dragMoved = false; sx = e.clientX; sy = e.clientY; dx = dy = 0;
-      track.style.transition = "none";
+    // Scroll / trackpad pinch to zoom around the cursor.
+    stageEl.addEventListener("wheel", e => {
+      e.preventDefault();
+      const r = stageEl.getBoundingClientRect();
+      zoomAt(sc * Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0018)), e.clientX - r.left, e.clientY - r.top, false);
+    }, { passive: false });
+
+    // Drag to pan, pinch to zoom, swipe to change photo (when not zoomed in), swipe down to close.
+    const pts = new Map();
+    let start = null, lastTap = 0, moved = false, overX = 0;
+    const local = e => { const r = stageEl.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    stageEl.addEventListener("pointerdown", e => {
+      stageEl.setPointerCapture(e.pointerId);
+      pts.set(e.pointerId, local(e));
+      moved = false;
+      const p = [...pts.values()];
+      if (p.length === 1) { start = { x: p[0].x, y: p[0].y, tx, ty, sc }; overX = 0; }
+      if (p.length === 2) start = { dist: Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y), mx: (p[0].x + p[1].x) / 2, my: (p[0].y + p[1].y) / 2, tx, ty, sc };
+      stageEl.classList.add("panning");
     });
-    view.addEventListener("pointermove", e => {
-      if (!dragging) return;
-      dx = e.clientX - sx; dy = e.clientY - sy;
-      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) dragMoved = true;
-      if (Math.abs(dx) > Math.abs(dy)) track.style.transform = `translateX(calc(${-cur * 100}% + ${dx}px))`;
-      else if (dy > 0) track.style.transform = `translateX(${-cur * 100}%) translateY(${dy}px)`;
+    stageEl.addEventListener("pointermove", e => {
+      if (!pts.has(e.pointerId) || !start) return;
+      pts.set(e.pointerId, local(e));
+      const p = [...pts.values()];
+      if (p.length >= 2 && start.dist) {
+        const d = Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y), mx = (p[0].x + p[1].x) / 2, my = (p[0].y + p[1].y) / 2;
+        const ns = Math.min(fit * 6, Math.max(fit, start.sc * d / start.dist));
+        const ix = (start.mx - start.tx) / start.sc, iy = (start.my - start.ty) / start.sc;
+        sc = ns; tx = mx - ix * sc; ty = my - iy * sc; mode = "free"; moved = true; apply(false);
+      } else if (p.length === 1 && start.x != null) {
+        const dx = p[0].x - start.x, dy = p[0].y - start.y;
+        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) moved = true;
+        const canPan = iw * sc > vw + 1 || ih * sc > vh + 1;
+        if (canPan) { const want = start.tx + dx; tx = want; ty = start.ty + dy; mode = "free"; apply(false); overX = want - tx; }
+        else { img.classList.remove("anim"); img.style.transform = `translate(${tx + dx}px, ${ty + Math.max(0, dy)}px) scale(${sc})`; }
+      }
     });
-    const up = () => {
-      if (!dragging) return;
-      dragging = false; track.style.transition = "";
-      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) go(cur + (dx < 0 ? 1 : -1));
-      else if (dy > 110 && dy > Math.abs(dx)) { track.style.transform = `translateX(${-cur * 100}%)`; close(); }
-      else go(cur);
-      setTimeout(() => (dragMoved = false), 0);
+    const end = e => {
+      if (!pts.has(e.pointerId)) return;
+      const p = pts.get(e.pointerId); pts.delete(e.pointerId);
+      stageEl.classList.remove("panning");
+      if (pts.size === 1) { const q = [...pts.values()][0]; start = { x: q.x, y: q.y, tx, ty, sc }; return; }
+      if (pts.size > 1) return;
+      const s0 = start; start = null;
+      if (!s0 || s0.x == null) return;
+      const dx = p.x - s0.x, dy = p.y - s0.y;
+      const canPan = iw * s0.sc > vw + 1 || ih * s0.sc > vh + 1;
+      if (!canPan && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) { go(cur + (dx < 0 ? 1 : -1)); return; }
+      if (canPan && Math.abs(overX) > 80 && Math.abs(dx) > Math.abs(dy)) { go(cur + (overX < 0 ? 1 : -1)); return; }  // dragged past the edge
+      if (!canPan && dy > 110 && dy > Math.abs(dx)) { close(); return; }
+      if (!canPan) apply(true);
+      if (!moved) {                                  // double-tap toggles tattoo / full photo
+        const now = Date.now();
+        if (now - lastTap < 320) { mode === "focus" ? showFull(true) : showFocus(true); lastTap = 0; }
+        else lastTap = now;
+      }
     };
-    view.addEventListener("pointerup", up);
-    view.addEventListener("pointercancel", up);
-    view.addEventListener("pointerleave", up);
+    stageEl.addEventListener("pointerup", end);
+    stageEl.addEventListener("pointercancel", end);
   })();
 </script>
 </body>
