@@ -134,6 +134,11 @@
   .art-grid figure:hover figcaption { transform: translateY(-4px); }
   .step .n { transition: transform .5s cubic-bezier(.2,.8,.2,1); }
   .step:hover .n { transform: translateX(8px) rotate(-4deg); }
+  .reviews { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 300px)); gap: 20px; }
+  .review { margin: 0; border: 3px solid var(--fg); background: #111; color: #f1ede6; box-shadow: 8px 8px 0 var(--accent); }
+  .review video { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; background: #000; }
+  .review figcaption { padding: 12px 14px; font-family: var(--mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; }
+  .review blockquote { margin: 0 0 6px; font-family: var(--font-body); font-size: .95rem; text-transform: none; letter-spacing: 0; }
   .book { position: relative; overflow: hidden; }
   .book::before { content: "IKE IKE IKE IKE IKE IKE"; position: absolute; right: -2%; bottom: -30%; font-family: var(--font-display); font-size: 9rem; color: #ffffff14; white-space: nowrap; pointer-events: none; }
 
@@ -261,7 +266,7 @@
       <span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span><span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span>
       <span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span><span>Art</span><span>Ink</span><span>Life</span><span>Flash</span><span>Street</span><span>Portrait</span>
     </div></div>
-    <nav class="tabs"><div class="wrap"><a href="#featured">Featured</a><a href="#art">Art</a><a href="#ink">Tattoo journey</a><a href="#life">Photography</a></div></nav>
+    <nav class="tabs"><div class="wrap"><a href="#featured">Featured</a><a href="#art">Art</a><a href="#ink">Tattoo journey</a><a href="#life">Photography</a><a href="#reviews">Reviews</a></div></nav>
 
     <main class="wrap">
       <section class="part" id="featured">
@@ -282,6 +287,11 @@
       <section class="part" id="life">
         <div class="part-head" data-reveal="wipe"><h2>Life</h2><span class="mono">Street · Portrait · Lifestyle</span></div>
         <div class="photo-grid" id="photoGrid" data-reveal-stagger="60"></div>
+      </section>
+
+      <section class="part" id="reviews">
+        <div class="part-head" data-reveal="wipe"><h2>Reviews</h2><span class="mono">Straight from the chair</span></div>
+        <div class="reviews" id="reviewGrid" data-reveal-stagger="90"></div>
       </section>
 
       <section class="book" data-reveal="scale">
@@ -347,6 +357,14 @@
           <div><h3>${escapeHTML(t.title)}</h3><p>${escapeHTML(t.story || "")}</p></div>
           ${mediaHTML(t.img, t.title, "Tattoo photo")}
         </article>`).join("");
+
+      const rv = (d.reviews || []).filter(r => r && r.video);
+      const rg = document.getElementById("reviewGrid");
+      if (!rv.length) { const sec = document.getElementById("reviews"); if (sec) sec.remove(); }
+      else rg.innerHTML = rv.map(r => `<figure class="review" data-reveal>
+          <video src="${r.video}" poster="${r.poster || ""}" controls playsinline preload="none"></video>
+          <figcaption>${r.quote ? `<blockquote>“${escapeHTML(r.quote)}”</blockquote>` : ""}${escapeHTML([r.name, r.piece].filter(Boolean).join(" · ") || "Client review")}</figcaption>
+        </figure>`).join("");
 
       document.getElementById("photoGrid").innerHTML = (d.photography || []).map(p =>
         `<figure data-reveal>${mediaHTML(p.img, p.title, "Photo")}<figcaption>${escapeHTML(p.title)}${p.place ? " · " + escapeHTML(p.place) : ""}</figcaption></figure>`).join("");

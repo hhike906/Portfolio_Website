@@ -19,11 +19,11 @@ window.IKE = {
   pieces: [
   {
     title: "Luna Moth",
-    note: "Fine line, between the shoulder blades. Watch it go on.",
+    note: "Fine line, between the shoulder blades — and what she thought of it.",
     cover: "../images/ike/luna-moth-01.jpg",
     shots: [
       { img: "../images/ike/luna-moth-01.jpg", caption: "Luna Moth", focus: { x: 32, y: 71, zoom: 1.6, w: 0.34, h: 0.58 } },
-      { video: "../images/ike/luna-moth-session.mp4", poster: "../images/ike/luna-moth-session.jpg", caption: "The session" }
+      { video: "../images/ike/luna-moth-session.mp4", poster: "../images/ike/luna-moth-session.jpg", caption: "Client review" }
     ]
   },
   {
@@ -45,6 +45,11 @@ window.IKE = {
       { img: "../images/ike/tattoo-12.jpg", caption: "Final", focus: { x: 50, y: 71, zoom: 2.4, w: 0.65, h: 0.08 } }
     ]
   }
+  ],
+
+  // Client reviews shown above the booking button. Video with a poster, plus an optional quote.
+  reviews: [
+    { video: "../images/ike/luna-moth-session.mp4", poster: "../images/ike/luna-moth-session.jpg", piece: "Luna Moth", name: "", quote: "" }
   ],
 
   art: [

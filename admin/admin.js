@@ -387,6 +387,14 @@
               opts: { title: x => x.caption || (x.video ? "Video" : "Photo"), sub: x => (x.video ? "video" : "photo"), img: x => x.img || x.poster, blank: { img: "", caption: "" }, addLabel: "Add photo or video" } }
           ], { title: p => p.title, sub: p => `${(p.shots || []).length} item${(p.shots || []).length === 1 ? "" : "s"}`, img: p => p.cover,
                blank: { title: "New piece", note: "", cover: "", shots: [] }, addLabel: "Add piece" })),
+        el("section", { class: "card" }, el("h2", { text: "Client reviews" }),
+          el("p", { class: "sub", text: "Video reviews shown above the “Book ink” button. Upload the video and a poster photo; the quote and name are optional." }),
+          listEditor("IKE", () => (I.reviews = I.reviews || []), [
+            { key: "video", label: "Video", type: "video", folder: "images/ike" },
+            { key: "poster", label: "Poster / thumbnail", type: "image", folder: "images/ike" },
+            { key: "piece", label: "Piece (e.g. Luna Moth)" }, { key: "name", label: "Client name (optional)" },
+            { key: "quote", label: "Quote (optional)", type: "textarea" }
+          ], { title: r => r.name || r.piece || "Review", sub: r => r.quote || "video", img: r => r.poster, blank: { video: "", poster: "", piece: "", name: "", quote: "" }, addLabel: "Add review" })),
         el("section", { class: "card" }, el("h2", { text: "Art" }),
           listEditor("IKE", () => I.art, [
             { key: "title", label: "Title" }, { key: "medium", label: "Medium" }, { key: "year", label: "Year" },
