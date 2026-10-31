@@ -96,7 +96,7 @@
           ctx.stroke();
         });
       }
-      if (t < 1700) raf = requestAnimationFrame(loop);
+      if (t < 2600) raf = requestAnimationFrame(loop);
     })(t0);
 
     // 4 — The wordmark is forged at the centre.
@@ -115,13 +115,68 @@
       { opacity: 0, letterSpacing: "0.7em", paddingLeft: "0.7em", filter: "blur(8px)", backgroundPosition: "100% 0" },
       { opacity: 1, letterSpacing: "0.16em", paddingLeft: "0.16em", filter: "blur(0)", backgroundPosition: "0% 0" }
     ], { duration: 900, delay: 620, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
+    // 4b — Molten layer on top of the copper: white-hot, glowing, slightly molten,
+    // then it cools away and leaves the copper letters underneath.
+    const hot = mark.cloneNode(true);
+    hot.style.cssText = mark.style.cssText;
+    Object.assign(hot.style, {
+      backgroundImage: "linear-gradient(180deg, #fffbe8 0%, #ffe39a 35%, #ffab3d 65%, #ff6a1a 100%)",
+      backgroundSize: "100% 100%",
+      textShadow: "0 0 10px #ffb347, 0 0 28px #ff7a1a, 0 0 60px #ff4d00, 0 0 110px #ff3d0088",
+      transformOrigin: "50% 40%"
+    });
+    stage.appendChild(hot);
+    const IN = 620, FORMED = IN + 900, COOL_AT = FORMED - 80, COOL_FOR = 850;
+    hot.animate([
+      { opacity: 0, letterSpacing: "0.7em", paddingLeft: "0.7em", filter: "blur(8px)" },
+      { opacity: 1, letterSpacing: "0.16em", paddingLeft: "0.16em", filter: "blur(0)" }
+    ], { duration: 900, delay: IN, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
+    // Heat shimmer: letters sag and swell a touch while molten.
+    hot.animate([
+      { transform: "translate(-50%, -50%) scale(1, 1)" },
+      { transform: "translate(-50%, -49.4%) scale(1.01, 1.035)" },
+      { transform: "translate(-50%, -50.2%) scale(.997, .99)" },
+      { transform: "translate(-50%, -49.6%) scale(1.005, 1.025)" },
+      { transform: "translate(-50%, -50%) scale(1, 1)" }
+    ], { duration: 1100, delay: IN + 200, easing: "ease-in-out" });
+    // Cooling: white-hot → orange → deep red glow → gone, revealing the copper.
+    hot.animate([
+      { opacity: 1, filter: "brightness(1.15) saturate(1)" },
+      { opacity: .9, filter: "brightness(.95) saturate(1.3) hue-rotate(-12deg)", offset: .45 },
+      { opacity: 0, filter: "brightness(.6) saturate(1.6) hue-rotate(-25deg)" }
+    ], { duration: COOL_FOR, delay: COOL_AT, easing: "ease-in", fill: "forwards" });
+    // The copper underneath starts dark and warms to its true colour as the heat leaves.
+    mark.animate([{ filter: "brightness(.55)" }, { filter: "brightness(.55)", offset: .3 }, { filter: "brightness(1)" }],
+      { duration: COOL_FOR + 300, delay: COOL_AT - 200, easing: "ease-out", fill: "both" });
+
+    // Molten drips falling from the letters while they are hot.
+    const mb = { w: Math.min(W * 0.8, word.length * 52) };
+    for (let i = 0; i < 9; i++) {
+      const drop = document.createElement("div");
+      const sz = 3 + Math.random() * 4;
+      Object.assign(drop.style, {
+        position: "absolute", left: `calc(50% + ${(Math.random() - 0.5) * mb.w}px)`, top: "calc(50% + clamp(1rem, 3.2vw, 2.4rem))",
+        width: sz + "px", height: sz * 1.6 + "px", borderRadius: "50% 50% 50% 50% / 40% 40% 60% 60%",
+        background: "radial-gradient(circle at 40% 35%, #fff4cc, #ff9a2e 55%, #ff4d00)",
+        boxShadow: "0 0 10px #ff7a1a", opacity: 0
+      });
+      stage.appendChild(drop);
+      const fall = 40 + Math.random() * 90;
+      drop.animate([
+        { opacity: 0, transform: "translateY(-6px) scaleY(.4)" },
+        { opacity: 1, transform: "translateY(0) scaleY(1.6)", offset: .25 },
+        { opacity: .9, transform: `translateY(${fall * .6}px) scaleY(1.2)`, offset: .7 },
+        { opacity: 0, transform: `translateY(${fall}px) scaleY(.8)` }
+      ], { duration: 900 + Math.random() * 500, delay: FORMED - 250 + Math.random() * 450, easing: "cubic-bezier(.5,0,.9,.6)", fill: "forwards" });
+    }
+
     const line = document.createElement("div");
     Object.assign(line.style, { position: "absolute", left: "50%", top: "calc(50% + clamp(2.2rem, 6vw, 4.4rem))", width: "120px", height: "1px", marginLeft: "-60px", background: COPPER, transform: "scaleX(0)" });
     stage.appendChild(line);
-    line.animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 600, delay: 1050, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
+    line.animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 700, delay: 1900, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
 
     document.documentElement.style.overflow = "hidden";
-    setTimeout(() => { cancelAnimationFrame(raf); location.href = href; }, 1750);
+    setTimeout(() => { cancelAnimationFrame(raf); location.href = href; }, 2750);
   }
 
   // Coming back with the Back button: drop any leftover overlay.

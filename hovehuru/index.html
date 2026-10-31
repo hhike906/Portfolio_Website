@@ -41,6 +41,12 @@
   /* Arriving through the copper portal from the home page: start in darkness, then the hero rises out of it */
   .from-portal body::after { content: ""; position: fixed; inset: 0; z-index: 999; pointer-events: none; background: #0a0806; animation: portalOut 1.2s ease .15s forwards; }
   @keyframes portalOut { to { opacity: 0; visibility: hidden; } }
+  .from-portal .hero h1 { animation: residual 2.2s ease-out .2s both; }
+  @keyframes residual {
+    0% { color: #ffcf8a; text-shadow: 0 0 18px #ff8a2a, 0 0 46px #ff5a00aa; }
+    60% { color: #e09454; text-shadow: 0 0 10px #ff6a1a66; }
+    100% { color: var(--copper); text-shadow: none; }
+  }
   @keyframes cue { 0%,100% { transform: scaleY(.3); opacity: .3 } 50% { transform: scaleY(1); opacity: 1 } }
 
   /* Motion details */
