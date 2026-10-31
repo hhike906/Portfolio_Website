@@ -169,17 +169,44 @@
   .arch-tools button { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; border: 2px solid var(--fg); background: transparent; color: var(--fg); padding: 8px 12px; min-height: 40px; cursor: pointer; }
   .arch-tools button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
   .archive { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 4px; }
-  .tile { position: relative; display: block; width: 100%; padding: 0; border: 0; background: #111; cursor: zoom-in; overflow: hidden; aspect-ratio: 4 / 5; text-align: left; color: #f1ede6; }
-  .tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .9s cubic-bezier(.2,.8,.2,1), filter .5s ease; }
-  .tile:hover img, .tile:focus-visible img { transform: scale(1.07); filter: contrast(1.08); }
-  .tile .meta { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 14px 12px; background: linear-gradient(transparent, #000c); }
+  @property --lens { syntax: "<length>"; inherits: true; initial-value: 0px; }
+  .archive { perspective: 1200px; }
+  .tile { position: relative; display: block; width: 100%; padding: 0; border: 0; background: #111; cursor: zoom-in; overflow: hidden; aspect-ratio: 4 / 5; text-align: left; color: #f1ede6;
+          transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(var(--s, 1)); transition: transform .35s cubic-bezier(.2,.8,.2,1), opacity .35s ease, filter .35s ease, --lens .45s cubic-bezier(.2,.8,.2,1); will-change: transform; -webkit-tap-highlight-color: transparent; }
+  .tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; transition: transform 1s cubic-bezier(.2,.8,.2,1), filter .5s ease; }
+  .tile .lens { position: absolute; inset: 0; pointer-events: none;
+    -webkit-mask: radial-gradient(circle at var(--mx, 50%) var(--my, 40%), #000 calc(var(--lens) - 2px), transparent var(--lens));
+            mask: radial-gradient(circle at var(--mx, 50%) var(--my, 40%), #000 calc(var(--lens) - 2px), transparent var(--lens)); }
+  .tile .lens img { transform-origin: var(--mx, 50%) var(--my, 40%); transform: scale(1.7); filter: saturate(1.25) contrast(1.1); }
+  .tile .lens-ring { position: absolute; left: var(--mx, 50%); top: var(--my, 40%); width: calc(var(--lens) * 2); height: calc(var(--lens) * 2); transform: translate(-50%, -50%); border-radius: 50%;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--accent), 0 10px 30px #0009; pointer-events: none; opacity: 0; transition: opacity .3s ease; }
+  .tile .trace { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
+  .tile .trace rect { fill: none; stroke: var(--accent); stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .9s cubic-bezier(.6,0,.2,1); }
+  .tile .glare { position: absolute; inset: 0; pointer-events: none; z-index: 2; background: radial-gradient(circle at var(--mx, 50%) var(--my, 40%), #ffffff2e, transparent 50%); opacity: 0; transition: opacity .3s ease; mix-blend-mode: overlay; }
+  .tile .meta { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 40px 14px 12px; background: linear-gradient(transparent, #000d); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
   .tile .meta b { display: block; font-family: var(--font-display); text-transform: uppercase; font-size: 1.2rem; letter-spacing: -.01em; line-height: 1.05; }
   .tile .meta small { font-family: var(--mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
-  .tile .badge { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #fff; font-family: var(--mono); font-size: .64rem; letter-spacing: .08em; padding: 4px 8px; }
-  .tile .num { position: absolute; top: 10px; left: 12px; font-family: var(--font-display); font-size: 1.4rem; color: #fff; text-shadow: 0 1px 8px #000a; }
-  .tile::after { content: "Open"; position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display); text-transform: uppercase; font-size: 1.4rem; color: #fff; background: #d1281fcc; opacity: 0; transition: opacity .3s ease; }
-  @media (hover: hover) { .tile:hover::after { opacity: 1; } }
-  .tile:focus-visible::after { opacity: 1; }
+  .tile .more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.2,.8,.2,1); }
+  .tile .more > span { overflow: hidden; font-family: var(--mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: #fff; }
+  .tile .more > span i { font-style: normal; display: inline-block; margin-top: 8px; padding: 5px 9px; background: var(--accent); }
+  .tile .badge { position: absolute; top: 10px; right: 10px; z-index: 2; background: var(--accent); color: #fff; font-family: var(--mono); font-size: .64rem; letter-spacing: .08em; padding: 4px 8px; transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+  .tile .num { position: absolute; top: 10px; left: 12px; z-index: 2; font-family: var(--font-display); font-size: 1.4rem; color: #fff; text-shadow: 0 1px 8px #000a; transition: transform .4s cubic-bezier(.2,.8,.2,1), color .3s; }
+  .tile .splash { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; overflow: visible; }
+  .tile:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  @media (hover: hover) {
+    .tile > img { filter: saturate(.55) brightness(.8); }
+    .tile:hover { --s: 1.035; --lens: 70px; z-index: 2; }
+    .tile:hover > img { filter: saturate(.8) brightness(.92); transform: scale(1.05); }
+    .tile:hover .lens-ring, .tile:hover .glare { opacity: 1; }
+    .tile:hover .trace rect { stroke-dashoffset: 0; }
+    .tile:hover .meta { transform: translateY(-4px); }
+    .tile:hover .more { grid-template-rows: 1fr; }
+    .tile:hover .badge { transform: translateY(-3px) rotate(-3deg); }
+    .tile:hover .num { transform: translateY(-2px) scale(1.15); color: var(--accent); }
+    .archive:hover .tile:not(:hover) { opacity: .45; filter: grayscale(.6); }
+  }
+  .tile.pressed { --s: .94; transition-duration: .12s; }
   @media (max-width: 640px) {
     .archive { grid-template-columns: 1fr 1fr; }
     .tile .meta { padding: 30px 10px 9px; }
@@ -528,11 +555,16 @@
         const pos = `${f.x == null ? 50 : f.x}% ${f.y == null ? 60 : f.y}%`;
         const vids = sh.filter(x => x.video).length;
         const sub = [p.placement, p.style, p.date].filter(Boolean).join(" · ");
+        const n = sh.length;
         return `<button type="button" class="tile" data-i="${i}" data-reveal aria-label="Open ${escapeHTML(p.title || "piece")}">
           <img src="${cover}" alt="" loading="lazy" data-fx="${f.x == null ? 50 : f.x}" data-fy="${f.y == null ? 60 : f.y}" style="object-position:${pos}">
+          <span class="lens" aria-hidden="true"><img src="${cover}" alt="" loading="lazy" style="object-position:${pos}"></span>
+          <span class="lens-ring" aria-hidden="true"></span>
+          <span class="glare" aria-hidden="true"></span>
+          <svg class="trace" viewBox="0 0 100 125" preserveAspectRatio="none" aria-hidden="true"><rect x="1.5" y="1.5" width="97" height="122" pathLength="1" vector-effect="non-scaling-stroke"/></svg>
           <span class="num">${String(i + 1).padStart(2, "0")}</span>
           <span class="badge">${sh.length - vids ? `${sh.length - vids} PHOTO${sh.length - vids > 1 ? "S" : ""}` : ""}${vids ? `${sh.length - vids ? " · " : ""}▶ ${vids}` : ""}</span>
-          <span class="meta"><b>${escapeHTML(p.title || "")}</b>${sub ? `<small>${escapeHTML(sub)}</small>` : ""}</span>
+          <span class="meta"><b>${escapeHTML(p.title || "")}</b>${sub ? `<small>${escapeHTML(sub)}</small>` : ""}<span class="more"><span><i>View ${n} →</i></span></span></span>
         </button>`;
       }).join("") || `<p class="arch-empty">Nothing in this style yet.</p>`;
       // Centre each cover on its tattoo (object-position alone aligns, it doesn't centre).
@@ -543,14 +575,87 @@
           const sc = Math.max(fw / iw, fh / ih), dw = iw * sc, dh = ih * sc;
           const pc = (focus, d, f, at) => d - f < 1 ? 50 : Math.max(0, Math.min(100, (focus / 100 * d - f * at) / (d - f) * 100));
           im.style.objectPosition = `${pc(+im.dataset.fx, dw, fw, .5)}% ${pc(+im.dataset.fy, dh, fh, .4)}%`;   // tattoo sits above the title label
+          const twin = im.parentElement.querySelector(".lens img"); if (twin) twin.style.objectPosition = im.style.objectPosition;
         };
         im.complete ? place() : im.addEventListener("load", place, { once: true });
       });
       window.Motion && Motion.scan(grid);
     }
-    grid.addEventListener("click", e => {
+    // Hover: tilt toward the cursor and move the ink lens / glare with it.
+    const finePointer = matchMedia("(hover: hover)").matches;
+    grid.addEventListener("pointermove", e => {
+      if (!finePointer || reduce) return;
       const t = e.target.closest(".tile"); if (!t) return;
-      open(ALL[+t.dataset.i].shots || [], t);
+      const r = t.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      t.style.setProperty("--mx", (x * 100).toFixed(1) + "%");
+      t.style.setProperty("--my", (y * 100).toFixed(1) + "%");
+      t.style.setProperty("--ry", ((x - .5) * 12).toFixed(2) + "deg");
+      t.style.setProperty("--rx", (-(y - .5) * 12).toFixed(2) + "deg");
+    });
+    grid.addEventListener("pointerout", e => {
+      const t = e.target.closest(".tile"); if (!t || t.contains(e.relatedTarget)) return;
+      t.style.removeProperty("--rx"); t.style.removeProperty("--ry");
+    });
+
+    // Click / tap: press in, ink splash from the touch point, then the photo expands into the viewer.
+    const NS = "http://www.w3.org/2000/svg";
+    function splash(t, px, py) {
+      const svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("class", "splash");
+      const r = t.getBoundingClientRect();
+      svg.setAttribute("viewBox", `0 0 ${r.width} ${r.height}`);
+      const mk = (tag, a) => { const n = document.createElementNS(NS, tag); for (const k in a) n.setAttribute(k, a[k]); svg.appendChild(n); return n; };
+      // a blot: wobbly circle
+      const pts = Array.from({ length: 14 }, (_, i) => { const a = i / 14 * Math.PI * 2, rr = 26 * (0.75 + Math.random() * 0.5) * (Math.random() < .2 ? 1.6 : 1); return [px + Math.cos(a) * rr, py + Math.sin(a) * rr]; });
+      const blot = mk("path", { d: "M" + pts.map(p => p.map(v => v.toFixed(1)).join(",")).join("L") + "Z", fill: "#d1281f", "stroke-linejoin": "round", "stroke-width": "10", stroke: "#d1281f" });
+      blot.style.transformOrigin = `${px}px ${py}px`;
+      blot.animate([{ transform: "scale(0)", opacity: .95 }, { transform: "scale(1.1)", opacity: .9, offset: .5 }, { transform: "scale(1.25)", opacity: 0 }], { duration: 520, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
+      for (let k = 0; k < 10; k++) {
+        const a = Math.random() * Math.PI * 2, d = 40 + Math.random() * 90, sz = 2 + Math.random() * 5;
+        const c = mk("circle", { cx: px, cy: py, r: sz.toFixed(1), fill: k % 3 ? "#111" : "#d1281f" });
+        c.animate([{ transform: "translate(0,0)", opacity: 1 }, { transform: `translate(${(Math.cos(a) * d).toFixed(1)}px, ${(Math.sin(a) * d + 14).toFixed(1)}px)`, opacity: 0 }],
+          { duration: 420 + Math.random() * 200, easing: "cubic-bezier(.15,.7,.3,1)", fill: "forwards" });
+      }
+      t.appendChild(svg);
+      setTimeout(() => svg.remove(), 750);
+    }
+    function expandFrom(t, done) {
+      const base = t.querySelector(":scope > img"), r = base.getBoundingClientRect();
+      const iw = base.naturalWidth || r.width, ih = base.naturalHeight || r.height;
+      const vw = innerWidth, vh = innerHeight, k = Math.min(vw * .9 / iw, vh * .74 / ih);
+      const tw = iw * k, th = ih * k;
+      const ghost = document.createElement("div");
+      Object.assign(ghost.style, { position: "fixed", left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px", zIndex: 300,
+        backgroundImage: `url(${base.currentSrc || base.src})`, backgroundSize: "cover", backgroundPosition: base.style.objectPosition || "50% 50%",
+        boxShadow: "0 30px 80px #000a", pointerEvents: "none" });
+      const shade = document.createElement("div");
+      Object.assign(shade.style, { position: "fixed", inset: "0", zIndex: 299, background: "#0c0c0c", opacity: 0, pointerEvents: "none" });
+      document.body.append(shade, ghost);
+      shade.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 480, easing: "ease-out", fill: "forwards" });
+      const a = ghost.animate([
+        { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px", backgroundSize: "cover" },
+        { left: (vw - tw) / 2 + "px", top: (vh - th) / 2 - 20 + "px", width: tw + "px", height: th + "px", backgroundSize: "cover" }
+      ], { duration: 520, easing: "cubic-bezier(.65,0,.25,1)", fill: "forwards" });
+      a.onfinish = () => {
+        done();
+        ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, fill: "forwards" }).onfinish = () => ghost.remove();
+        shade.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, fill: "forwards" }).onfinish = () => shade.remove();
+      };
+    }
+    let opening = false;
+    grid.addEventListener("click", e => {
+      const t = e.target.closest(".tile"); if (!t || opening) return;
+      const list = ALL[+t.dataset.i].shots || [];
+      if (reduce) { open(list, t); return; }
+      opening = true;
+      const r = t.getBoundingClientRect();
+      const px = e.clientX ? e.clientX - r.left : r.width / 2, py = e.clientY ? e.clientY - r.top : r.height / 2;
+      t.classList.add("pressed");
+      splash(t, px, py);
+      setTimeout(() => {
+        t.classList.remove("pressed");
+        expandFrom(t, () => { open(list, t, { noFan: true }); opening = false; });
+      }, 230);
     });
     paintArchive("All");
 
@@ -615,13 +720,14 @@
       count.textContent = `${cur + 1} / ${shots.length}`;
     }
 
-    function open(list, fromEl) {
+    function open(list, fromEl, opts) {
+      opts = opts || {};
       if (pressed) return;
       shots = list; front = fromEl;
       thumbs.innerHTML = shots.map((s, i) => `<button class="${s.video ? "vid" : ""}" style="background-image:url(${thumbOf(s)})" aria-label="Show ${i + 1}${s.video ? " (video)" : ""}"></button>`).join("");
       lastFocus = document.activeElement;
       const r = front.getBoundingClientRect();
-      const flyers = shots.slice(0, 6).map(s => {
+      const flyers = opts.noFan ? [] : shots.slice(0, 6).map(s => {
         const f = document.createElement("div");
         f.className = "burst";
         Object.assign(f.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px", backgroundImage: `url(${thumbOf(s)})` });
@@ -634,8 +740,13 @@
       hint.style.opacity = "1"; setTimeout(() => (hint.style.opacity = "0"), 3500);
       if (reduce) { flyers.forEach(f => f.remove()); document.getElementById("lbClose").focus(); return; }
       const cx = innerWidth / 2 - (r.left + r.width / 2), cy = innerHeight / 2 - (r.top + r.height / 2), n = flyers.length;
-      lb.animate([{ backgroundColor: "rgba(12,12,12,0)" }, { backgroundColor: "rgba(12,12,12,1)" }], { duration: 450, easing: "ease-out" });
-      stageEl.animate([{ opacity: 0, transform: "scale(.94)" }, { opacity: 1, transform: "scale(1)" }], { duration: 400, delay: 520, easing: "ease-out", fill: "backwards" });
+      if (opts.noFan) {
+        // Arriving from the archive's expand animation: the photo is already on screen — just settle in.
+        stageEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: "ease-out" });
+      } else {
+        lb.animate([{ backgroundColor: "rgba(12,12,12,0)" }, { backgroundColor: "rgba(12,12,12,1)" }], { duration: 450, easing: "ease-out" });
+        stageEl.animate([{ opacity: 0, transform: "scale(.94)" }, { opacity: 1, transform: "scale(1)" }], { duration: 400, delay: 520, easing: "ease-out", fill: "backwards" });
+      }
       flyers.forEach((f, i) => {
         const spread = i - (n - 1) / 2;
         f.animate([
