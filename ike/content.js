@@ -11,10 +11,22 @@
 window.IKE = {
   intro: "Ike is where the work stops being polite. Paintings, flash, the tattoos — mine and the ones I've put on other people — and photographs of the life around them.",
 
-  // The interactive "featured" piece at the top of the vault.
+  // Featured pieces at the top of the vault — each gets its own interactive deck.
   // cover = the image people play with; shots = everything that opens when they click it.
-  // focus = where the tattoo is in each photo (x/y in % from the top-left) and how far to zoom in on it.
-  featured: {
+  // A shot can be a photo (img) or a video (video + poster).
+  // focus = where the tattoo is in a photo (x/y in % from the top-left), how far to zoom,
+  //         and w/h = how much of the photo the tattoo covers (the zoom never crops past it).
+  pieces: [
+  {
+    title: "Luna Moth",
+    note: "Fine line, between the shoulder blades. Watch it go on.",
+    cover: "../images/ike/luna-moth-01.jpg",
+    shots: [
+      { img: "../images/ike/luna-moth-01.jpg", caption: "Luna Moth", focus: { x: 32, y: 71, zoom: 1.6, w: 0.34, h: 0.58 } },
+      { video: "../images/ike/luna-moth-session.mp4", poster: "../images/ike/luna-moth-session.jpg", caption: "The session" }
+    ]
+  },
+  {
     title: "Red Orchid Vine",
     note: "Fine line + red, across the lower back.",
     cover: "../images/ike/tattoo-01.jpg",
@@ -32,7 +44,8 @@ window.IKE = {
       { img: "../images/ike/tattoo-11.jpg", caption: "Low light", focus: { x: 26, y: 50, zoom: 1.25, w: 0.12, h: 0.85 } },
       { img: "../images/ike/tattoo-12.jpg", caption: "Final", focus: { x: 50, y: 71, zoom: 2.4, w: 0.65, h: 0.08 } }
     ]
-  },
+  }
+  ],
 
   art: [
     { title: "Untitled I", medium: "Ink on paper", year: "", img: "" },

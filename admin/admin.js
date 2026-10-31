@@ -203,6 +203,7 @@
       const f = file.files && file.files[0]; if (!f) return;
       try {
         let blob = f, ext = (f.name.split(".").pop() || "bin").toLowerCase();
+        if (opts.raw && f.size > 45 * 1024 * 1024) { toast("That file is over 45 MB — export it smaller (720p) and try again.", 5000); file.value = ""; return; }
         if (!opts.raw) { toast("Resizing…"); blob = await resizeImage(f, opts.max || 1600); ext = "jpg"; }
         const repoPath = `${folder}/${slug(f.name)}-${Date.now().toString(36)}.${ext}`;
         pending.set(repoPath, { blob, url: URL.createObjectURL(blob) });
@@ -233,6 +234,10 @@
       case "select": return selectField(f.label, typeof f.options === "function" ? f.options() : f.options, get, set, { onchange });
       case "bool": return boolField(f.label, get, set, { onchange });
       case "image": return imageField(f.label, f.folder, get, set, { onchange });
+      case "video": return imageField(f.label, f.folder, get, set, { onchange, raw: true, accept: "video/mp4,video/quicktime,video/webm" });
+      case "list": return el("div", { class: "field full" }, el("span", { text: f.label }),
+        f.hint ? el("span", { class: "hint", text: f.hint }) : null,
+        listEditor(global, () => (obj[f.key] = obj[f.key] || []), f.schema, f.opts));
       case "price": return textField(f.label, () => (obj[f.key] == null ? "" : obj[f.key]), v => { const n = parseFloat(v); obj[f.key] = v.trim() === "" || isNaN(n) ? null : n; touch(global); }, { inputmode: "decimal", hint: f.hint || "Leave empty for “Price on request”", onchange });
       case "focus": return textField(f.label, () => { const v = obj[f.key] || {}; return v.x == null ? "" : `${v.x}, ${v.y}, ${v.zoom == null ? 1.8 : v.zoom}`; },
         v => { const n = v.split(/[ ,]+/).map(parseFloat).filter(x => !isNaN(x)); obj[f.key] = n.length >= 2 ? Object.assign({}, obj[f.key], { x: n[0], y: n[1], zoom: n[2] || 1.8 }) : undefined; touch(global); },
@@ -357,23 +362,31 @@
       textCard("Workshop section", null, [["hh.workshopImg", "Workshop photo", "image"], ["hh.ordersNote", "Line under “The Six Orders”", "wide"], ["hh.craftTitle", "Title", "wide"], ["hh.craftP1", "Paragraph 1", "long"], ["hh.craftP2", "Paragraph 2", "long"]])
     ]},
     { id: "ike", icon: "✶", name: "Ike", page: "../ike/", globals: ["SITE_TEXT", "IKE"], render: () => {
-      const I = D.IKE; I.featured = I.featured || { title: "", note: "", cover: "", shots: [] };
+      const I = D.IKE;
+      if (!Array.isArray(I.pieces)) { I.pieces = I.featured ? [I.featured] : []; }
+      delete I.featured;
       ["art", "tattoos", "photography"].forEach(k => (I[k] = I[k] || []));
       return [
         textCard("Email gate", "What visitors see before they enter.", [["ike.gateText", "Gate text", "long"], ["ike.gateTitle", "Form title"], ["ike.gateFine", "Small print", "wide"]]),
         el("section", { class: "card" }, el("h2", { text: "Intro" }),
           el("div", { class: "grid2" }, textField("Intro paragraph (after unlocking)", () => I.intro, v => { I.intro = v; touch("IKE"); }, { multi: true, full: true }))),
-        el("section", { class: "card" }, el("h2", { text: "Featured piece" }),
-          el("p", { class: "sub", text: "The interactive cover people play with. Clicking it opens every photo in the list below." }),
-          el("div", { class: "grid2" },
-            textField("Title", () => I.featured.title, v => { I.featured.title = v; touch("IKE"); }),
-            textField("Short note", () => I.featured.note, v => { I.featured.note = v; touch("IKE"); }),
-            imageField("Cover photo", "images/ike", () => I.featured.cover, v => { I.featured.cover = v; touch("IKE"); })),
-          el("h2", { text: "Gallery photos", style: "margin-top:18px" }),
-          listEditor("IKE", () => I.featured.shots, [
-            { key: "img", label: "Photo", type: "image", folder: "images/ike" }, { key: "caption", label: "Caption" },
-            { key: "focus", label: "Tattoo position", type: "focus", hint: "x %, y %, zoom — e.g. “50, 74, 2” = centre, 74% down, 2× zoom. Empty = centre." }
-          ], { title: s => s.caption, img: s => s.img, blank: { img: "", caption: "" }, addLabel: "Add photo" })),
+        el("section", { class: "card" }, el("h2", { text: "Featured pieces" }),
+          el("p", { class: "sub", text: "Each piece gets its own interactive deck at the top of Ike. Clicking it opens its photos and videos. Order here is the order on the page." }),
+          listEditor("IKE", () => I.pieces, [
+            { key: "title", label: "Title" }, { key: "note", label: "Short note" },
+            { key: "cover", label: "Cover photo", type: "image", folder: "images/ike" },
+            { key: "shots", label: "Photos & videos", type: "list",
+              hint: "Photo: upload under Photo and set the tattoo position. Video: upload under Video (MP4, keep it under ~25 MB) plus a Poster photo for the thumbnail.",
+              schema: [
+                { key: "img", label: "Photo", type: "image", folder: "images/ike" },
+                { key: "video", label: "Video (instead of a photo)", type: "video", folder: "images/ike" },
+                { key: "poster", label: "Video poster / thumbnail", type: "image", folder: "images/ike" },
+                { key: "caption", label: "Caption" },
+                { key: "focus", label: "Tattoo position (photos)", type: "focus", hint: "x %, y %, zoom — e.g. “50, 74, 2” = centre, 74% down, 2× zoom. Empty = centre." }
+              ],
+              opts: { title: x => x.caption || (x.video ? "Video" : "Photo"), sub: x => (x.video ? "video" : "photo"), img: x => x.img || x.poster, blank: { img: "", caption: "" }, addLabel: "Add photo or video" } }
+          ], { title: p => p.title, sub: p => `${(p.shots || []).length} item${(p.shots || []).length === 1 ? "" : "s"}`, img: p => p.cover,
+               blank: { title: "New piece", note: "", cover: "", shots: [] }, addLabel: "Add piece" })),
         el("section", { class: "card" }, el("h2", { text: "Art" }),
           listEditor("IKE", () => I.art, [
             { key: "title", label: "Title" }, { key: "medium", label: "Medium" }, { key: "year", label: "Year" },

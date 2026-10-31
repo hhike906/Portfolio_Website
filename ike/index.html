@@ -154,6 +154,11 @@
   .tap { position: absolute; left: 50%; bottom: -18px; transform: translateX(-50%); z-index: 4; background: var(--accent); color: #fff; font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; padding: 8px 14px; white-space: nowrap; box-shadow: 4px 4px 0 var(--fg); }
   .motion-on .tap { animation: nudge 1.8s ease-in-out infinite; }
   @keyframes nudge { 50% { transform: translateX(-50%) translateY(-5px); } }
+  .pieces { display: grid; gap: 96px; }
+  .featured.flip { grid-template-columns: 1fr minmax(280px, 440px); }
+  .featured.flip .deck { order: 2; }
+  .deck .play { position: absolute; right: 12px; top: 12px; z-index: 4; background: #111; color: #fff; font-family: var(--mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; padding: 6px 10px; }
+  .deck .play::before { content: "▶ "; color: var(--accent); }
   .featured h3 { font-size: clamp(2rem, 4.5vw, 3.4rem); text-transform: uppercase; letter-spacing: -.02em; margin: 10px 0 12px; }
   .featured .hint { font-family: var(--mono); font-size: .78rem; color: var(--muted); }
   .featured .hint b { color: var(--fg); }
@@ -174,6 +179,12 @@
   .lb .tools button { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; background: transparent; color: #f1ede6; border: 1px solid #ffffff44; padding: 8px 12px; min-height: 38px; cursor: pointer; }
   .lb .tools button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); }
   .lb .tools .zoomb { width: 38px; padding: 0; font-size: 1rem; }
+  .lb .vidbox { position: absolute; inset: 0 64px; display: none; align-items: center; justify-content: center; }
+  .lb .vidbox video { max-width: 100%; max-height: 100%; background: #000; }
+  .lb.video .vidbox { display: flex; }
+  .lb.video .stagebox, .lb.video .tools, .lb.video .hint { display: none; }
+  .lb .thumbs button.vid { position: relative; }
+  .lb .thumbs button.vid::after { content: "▶"; position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 1.1rem; text-shadow: 0 1px 6px #000; }
   .lb .hint { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 3; font-family: var(--mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #f1ede6aa; pointer-events: none; transition: opacity .6s; width: 92%; text-align: center; }
   .lb .arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 52px; height: 52px; border: 2px solid #f1ede6; background: #0c0c0c99; color: #f1ede6; font-size: 1.4rem; cursor: pointer; }
   .lb .arrow:hover { background: var(--accent); border-color: var(--accent); }
@@ -184,9 +195,11 @@
   .lb .thumbs button[aria-current="true"] { opacity: 1; border-color: var(--accent); transform: translateY(-4px); }
   .lb .burst { position: fixed; z-index: 199; pointer-events: none; border: 3px solid var(--fg); background: #111 center / cover; }
   @media (max-width: 860px) {
-    .featured { grid-template-columns: 1fr; gap: 40px; }
+    .featured, .featured.flip { grid-template-columns: 1fr; gap: 40px; }
+    .featured.flip .deck { order: 0; }
+    .pieces { gap: 72px; }
     .deck { max-width: 360px; margin: 0 auto; }
-    .lb .stagebox { inset: 0; }
+    .lb .stagebox, .lb .vidbox { inset: 0; }
     .lb .arrow { display: none; }
   }
 
@@ -253,21 +266,7 @@
     <main class="wrap">
       <section class="part" id="featured">
         <div class="part-head" data-reveal="wipe"><h2>Featured</h2><span class="mono">Play with it · then open it</span></div>
-        <div class="featured">
-          <div class="deck" id="deck" role="button" tabindex="0" aria-label="Open the gallery" data-reveal="scale">
-            <div class="card back1" id="back1"></div>
-            <div class="card back2" id="back2"></div>
-            <div class="card front" id="front"><img id="coverImg" alt=""><span class="glare"></span></div>
-            <div class="loupe" id="loupe" aria-hidden="true"></div>
-            <span class="tap" id="tapLabel">Tap to open</span>
-          </div>
-          <div data-reveal="right">
-            <span class="stamp">Ike Ink</span>
-            <h3 id="featTitle"></h3>
-            <p id="featNote"></p>
-            <p class="hint"><b>Hover</b> to see the linework up close. <b>Click</b> to break the stack open. <b>Swipe</b>, arrow keys or the thumbnails to move through.</p>
-          </div>
-        </div>
+        <div class="pieces" id="pieces"></div>
       </section>
 
       <section class="part" id="art">
@@ -300,6 +299,7 @@
     <div class="viewport" id="lbView">
       <button class="arrow prev" id="lbPrev" aria-label="Previous">←</button>
       <div class="stagebox" id="lbStage"><img id="lbImg" alt="" draggable="false"></div>
+      <div class="vidbox"><video id="lbVid" controls playsinline preload="metadata"></video></div>
       <span class="hint" id="lbHint">Drag to look around · pinch or scroll to zoom · double-tap to switch</span>
       <div class="tools">
         <button type="button" id="lbFocus" aria-pressed="true">Tattoo</button>
@@ -391,59 +391,78 @@
     });
   })();
 
-  // ---------- Featured deck + gallery ----------
+  // ---------- Featured decks + gallery ----------
   (function () {
-    const F = (window.IKE || {}).featured;
-    if (!F) { const sec = document.getElementById("featured"); if (sec) sec.remove(); return; }
-    const deck = document.getElementById("deck"), front = document.getElementById("front"), loupe = document.getElementById("loupe");
+    const D = window.IKE || {};
+    const PIECES = (D.pieces && D.pieces.length ? D.pieces : (D.featured ? [D.featured] : [])).filter(p => p && (p.shots || []).length);
+    if (!PIECES.length) { const sec = document.getElementById("featured"); if (sec) sec.remove(); return; }
     const reduce = window.Motion && Motion.reduce;
-    document.getElementById("coverImg").src = F.cover;
-    document.getElementById("coverImg").alt = F.title;
-    document.getElementById("featTitle").textContent = F.title;
-    document.getElementById("featNote").textContent = F.note || "";
-    const shots = F.shots || [];
-    document.getElementById("tapLabel").textContent = "Tap to open · " + shots.length + " shots";
-    if (shots[1]) document.getElementById("back1").style.backgroundImage = `url(${shots[1].img})`;
-    if (shots[2]) document.getElementById("back2").style.backgroundImage = `url(${shots[2].img})`;
+    const thumbOf = s => s.img || s.poster || "";
+    const wrap = document.getElementById("pieces");
+    let shots = [], front = null, pressed = false;
 
-    // Tilt + glare + magnifying loupe (mouse/trackpad); press-and-hold loupe on touch.
-    const ZOOM = 2.6;
-    function lens(e) {
-      const r = front.getBoundingClientRect();
-      const x = e.clientX - r.left, y = e.clientY - r.top;
-      if (x < 0 || y < 0 || x > r.width || y > r.height) { deck.classList.remove("lens"); return; }
-      const dr = deck.getBoundingClientRect();
-      loupe.style.left = (e.clientX - dr.left) + "px";
-      loupe.style.top = (e.clientY - dr.top) + "px";
-      // Match the cover's object-fit: cover + object-position: 50% 80% so the loupe shows exactly what's under the cursor.
-      const img = document.getElementById("coverImg");
-      const iw = img.naturalWidth || r.width, ih = img.naturalHeight || r.height;
-      const sc = Math.max(r.width / iw, r.height / ih), dw = iw * sc, dh = ih * sc;
-      const ox = (r.width - dw) * 0.5, oy = (r.height - dh) * 0.8;
-      loupe.style.backgroundImage = `url(${F.cover})`;
-      loupe.style.backgroundSize = `${dw * ZOOM}px ${dh * ZOOM}px`;
-      loupe.style.backgroundPosition = `${-((x - ox) * ZOOM - 75)}px ${-((y - oy) * ZOOM - 75)}px`;
-      deck.classList.add("lens");
-      front.style.setProperty("--gx", (x / r.width) * 100 + "%");
-      front.style.setProperty("--gy", (y / r.height) * 100 + "%");
-      if (!reduce) front.style.transform = `rotateY(${(x / r.width - .5) * 14}deg) rotateX(${-(y / r.height - .5) * 14}deg)`;
-    }
-    let pressTimer = 0, pressed = false;
-    deck.addEventListener("pointermove", e => { if (e.pointerType === "mouse" || pressed) lens(e); });
-    deck.addEventListener("pointerleave", () => { deck.classList.remove("lens"); front.style.transform = ""; });
-    deck.addEventListener("pointerdown", e => {
-      if (e.pointerType !== "mouse") pressTimer = setTimeout(() => { pressed = true; lens(e); }, 260);
+    PIECES.forEach((P, n) => {
+      const sh = P.shots || [], cover = P.cover || thumbOf(sh[0]);
+      const vids = sh.filter(x => x.video).length, pics = sh.length - vids;
+      const label = [pics ? `${pics} photo${pics > 1 ? "s" : ""}` : "", vids ? `${vids} video${vids > 1 ? "s" : ""}` : ""].filter(Boolean).join(" · ");
+      const row = document.createElement("div");
+      row.className = "featured" + (n % 2 ? " flip" : "");
+      row.innerHTML = `
+        <div class="deck" role="button" tabindex="0" aria-label="Open the ${escapeHTML(P.title || "")} gallery" data-reveal="scale">
+          <div class="card back1"${sh[1] ? ` style="background-image:url(${thumbOf(sh[1])})"` : ""}></div>
+          <div class="card back2"${sh[2] ? ` style="background-image:url(${thumbOf(sh[2])})"` : ""}></div>
+          <div class="card front"><img alt="${escapeHTML(P.title || "")}" src="${cover}"><span class="glare"></span></div>
+          ${vids ? `<span class="play">Video inside</span>` : ""}
+          <div class="loupe" aria-hidden="true"></div>
+          <span class="tap">Tap to open · ${label}</span>
+        </div>
+        <div data-reveal="${n % 2 ? "left" : "right"}">
+          <span class="stamp">Ike Ink</span>
+          <h3>${escapeHTML(P.title || "")}</h3>
+          <p>${escapeHTML(P.note || "")}</p>
+          ${n === 0 ? `<p class="hint"><b>Hover</b> to see the linework up close. <b>Click</b> to break the stack open. <b>Swipe</b>, arrow keys or the thumbnails to move through.</p>` : ""}
+        </div>`;
+      wrap.appendChild(row);
+      const deck = row.querySelector(".deck"), fr = row.querySelector(".front"), loupe = row.querySelector(".loupe"), cimg = fr.querySelector("img");
+
+      // Tilt + glare + magnifying loupe (mouse/trackpad); press-and-hold loupe on touch.
+      const ZOOM = 2.6;
+      function lens(e) {
+        const r = fr.getBoundingClientRect();
+        const x = e.clientX - r.left, y = e.clientY - r.top;
+        if (x < 0 || y < 0 || x > r.width || y > r.height) { deck.classList.remove("lens"); return; }
+        const dr = deck.getBoundingClientRect();
+        loupe.style.left = (e.clientX - dr.left) + "px";
+        loupe.style.top = (e.clientY - dr.top) + "px";
+        const iw = cimg.naturalWidth || r.width, ih = cimg.naturalHeight || r.height;
+        const sc = Math.max(r.width / iw, r.height / ih), dw = iw * sc, dh = ih * sc;
+        const ox = (r.width - dw) * 0.5, oy = (r.height - dh) * 0.8;   // matches object-position: 50% 80%
+        loupe.style.backgroundImage = `url(${cover})`;
+        loupe.style.backgroundSize = `${dw * ZOOM}px ${dh * ZOOM}px`;
+        loupe.style.backgroundPosition = `${-((x - ox) * ZOOM - 75)}px ${-((y - oy) * ZOOM - 75)}px`;
+        deck.classList.add("lens");
+        fr.style.setProperty("--gx", (x / r.width) * 100 + "%");
+        fr.style.setProperty("--gy", (y / r.height) * 100 + "%");
+        if (!reduce) fr.style.transform = `rotateY(${(x / r.width - .5) * 14}deg) rotateX(${-(y / r.height - .5) * 14}deg)`;
+      }
+      let pressTimer = 0;
+      deck.addEventListener("pointermove", e => { if (e.pointerType === "mouse" || pressed) lens(e); });
+      deck.addEventListener("pointerleave", () => { deck.classList.remove("lens"); fr.style.transform = ""; });
+      deck.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") pressTimer = setTimeout(() => { pressed = true; lens(e); }, 260); });
+      const endPress = () => { clearTimeout(pressTimer); if (pressed) { setTimeout(() => (pressed = false), 0); deck.classList.remove("lens"); fr.style.transform = ""; } };
+      deck.addEventListener("pointerup", endPress);
+      deck.addEventListener("pointercancel", endPress);
+      deck.addEventListener("click", () => open(sh, fr));
+      deck.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(sh, fr); } });
     });
-    const endPress = () => { clearTimeout(pressTimer); if (pressed) { setTimeout(() => (pressed = false), 0); deck.classList.remove("lens"); front.style.transform = ""; } };
-    deck.addEventListener("pointerup", endPress);
-    deck.addEventListener("pointercancel", endPress);
+    window.Motion && Motion.scan(wrap);
 
     // ---------- Lightbox: zoom / pan viewer, framed on the tattoo ----------
     const lb = document.getElementById("lb"), thumbs = document.getElementById("lbThumbs");
     const cap = document.getElementById("lbCap"), count = document.getElementById("lbCount");
     const stageEl = document.getElementById("lbStage"), img = document.getElementById("lbImg"), hint = document.getElementById("lbHint");
     const bFocus = document.getElementById("lbFocus"), bFull = document.getElementById("lbFull");
-    thumbs.innerHTML = shots.map((s, i) => `<button style="background-image:url(${s.img})" aria-label="Show ${i + 1}"></button>`).join("");
+    const vid = document.getElementById("lbVid");
     let cur = 0, lastFocus = null;
     let iw = 1, ih = 1, vw = 1, vh = 1, fit = 1, sc = 1, tx = 0, ty = 0, mode = "focus";
 
@@ -484,23 +503,31 @@
     function go(i) {
       cur = (i + shots.length) % shots.length;
       const s = shots[cur];
+      vid.pause();
+      lb.classList.toggle("video", !!s.video);
+      if (s.video) {
+        if (vid.getAttribute("src") !== s.video) { vid.src = s.video; vid.poster = s.poster || ""; }
+        vid.play().catch(() => {});
+      }
       img.classList.remove("ready");
       img.onload = () => { iw = img.naturalWidth; ih = img.naturalHeight; img.style.width = iw + "px"; img.style.height = ih + "px"; measure(); showFocus(false); requestAnimationFrame(() => img.classList.add("ready")); };
-      img.src = s.img; img.alt = s.caption || "";
+      if (s.img) { img.src = s.img; img.alt = s.caption || ""; }
       thumbs.querySelectorAll("button").forEach((b, k) => b.setAttribute("aria-current", String(k === cur)));
       const tb = thumbs.children[cur]; if (tb && tb.scrollIntoView) tb.scrollIntoView({ block: "nearest", inline: "center" });
       cap.textContent = s.caption || "";
       count.textContent = `${cur + 1} / ${shots.length}`;
     }
 
-    function open() {
+    function open(list, fromEl) {
       if (pressed) return;
+      shots = list; front = fromEl;
+      thumbs.innerHTML = shots.map((s, i) => `<button class="${s.video ? "vid" : ""}" style="background-image:url(${thumbOf(s)})" aria-label="Show ${i + 1}${s.video ? " (video)" : ""}"></button>`).join("");
       lastFocus = document.activeElement;
       const r = front.getBoundingClientRect();
       const flyers = shots.slice(0, 6).map(s => {
         const f = document.createElement("div");
         f.className = "burst";
-        Object.assign(f.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px", backgroundImage: `url(${s.img})` });
+        Object.assign(f.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px", backgroundImage: `url(${thumbOf(s)})` });
         lb.appendChild(f);
         return f;
       });
@@ -522,10 +549,8 @@
       });
       setTimeout(() => document.getElementById("lbClose").focus(), 50);
     }
-    function close() { lb.classList.remove("open"); document.body.style.overflow = ""; if (lastFocus) lastFocus.focus(); }
+    function close() { vid.pause(); lb.classList.remove("open", "video"); document.body.style.overflow = ""; if (lastFocus) lastFocus.focus(); }
 
-    deck.addEventListener("click", open);
-    deck.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
     document.getElementById("lbClose").addEventListener("click", close);
     document.getElementById("lbPrev").addEventListener("click", () => go(cur - 1));
     document.getElementById("lbNext").addEventListener("click", () => go(cur + 1));
