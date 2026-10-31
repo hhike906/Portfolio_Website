@@ -1,5 +1,5 @@
 /*
-  Site admin — edits the site's data files and images, then publishes them to GitHub.
+  Site admin: edits the site's data files and images, then publishes them to GitHub.
   The live site (GitHub Pages) rebuilds about a minute after each publish.
 
   Nothing here is secret: the page only works for someone holding a GitHub key
@@ -142,7 +142,7 @@
     const n = dirty.size + pending.size;
     $("#savebar").hidden = n === 0;
     $("#dirtyText").textContent = n === 0 ? "" :
-      `${dirty.size} file${dirty.size === 1 ? "" : "s"} changed` + (pending.size ? ` · ${pending.size} new upload${pending.size === 1 ? "" : "s"}` : "") + " — not live yet";
+      `${dirty.size} file${dirty.size === 1 ? "" : "s"} changed` + (pending.size ? ` · ${pending.size} new upload${pending.size === 1 ? "" : "s"}` : "") + ". Not live yet.";
     document.querySelectorAll(".tabs button").forEach(b => {
       const t = TABS.find(x => x.id === b.dataset.tab);
       b.classList.toggle("dirty", !!t && dirtyTabs.has(t.id) && t.globals.some(g => dirty.has(fileOf(g).path)));
@@ -179,7 +179,7 @@
   }
   function selectField(label, options, get, set, opts) {
     const sel = el("select");
-    options.forEach(o => sel.append(el("option", { value: o, text: o === "" ? "— none —" : o })));
+    options.forEach(o => sel.append(el("option", { value: o, text: o === "" ? "(none)" : o })));
     sel.value = get() || "";
     sel.addEventListener("change", () => { set(sel.value); opts && opts.onchange && opts.onchange(); });
     return el("label", { class: "field" }, el("span", { text: label }), sel);
@@ -203,13 +203,13 @@
       const f = file.files && file.files[0]; if (!f) return;
       try {
         let blob = f, ext = (f.name.split(".").pop() || "bin").toLowerCase();
-        if (opts.raw && f.size > 45 * 1024 * 1024) { toast("That file is over 45 MB — export it smaller (720p) and try again.", 5000); file.value = ""; return; }
+        if (opts.raw && f.size > 45 * 1024 * 1024) { toast("That file is over 45 MB. Export it smaller (720p) and try again.", 5000); file.value = ""; return; }
         if (!opts.raw) { toast("Resizing…"); blob = await resizeImage(f, opts.max || 1600); ext = "jpg"; }
         const repoPath = `${folder}/${slug(f.name)}-${Date.now().toString(36)}.${ext}`;
         pending.set(repoPath, { blob, url: URL.createObjectURL(blob) });
         set((opts.prefix === undefined ? "../" : opts.prefix) + repoPath);
         paint(); opts.onchange && opts.onchange(); updateSavebar();
-        toast(opts.raw ? "File ready — publish to make it live" : `Photo ready (${Math.round(blob.size / 1024)} KB) — publish to make it live`);
+        toast(opts.raw ? "File ready. Publish to make it live." : `Photo ready (${Math.round(blob.size / 1024)} KB). Publish to make it live.`);
       } catch (e) { toast("Couldn't read that file: " + e.message, 4000); }
       file.value = "";
     });
@@ -319,9 +319,9 @@
     ]},
     { id: "engineering", icon: "⚙", name: "Engineering", page: "../engineering/", globals: ["SITE_TEXT", "PROJECTS"], render: () => [
       textCard("Top of the page", null, [["eng.eyebrow", "Small line above headline", "wide"], ["eng.headline", "Headline", "wide"], ["eng.lede", "Intro paragraph", "long"]]),
-      textCard("Four highlight boxes", null, [1, 2, 3, 4].flatMap(n => [[`eng.stat${n}.title`, `Box ${n} — title`], [`eng.stat${n}.sub`, `Box ${n} — small text`]])),
+      textCard("Four highlight boxes", null, [1, 2, 3, 4].flatMap(n => [[`eng.stat${n}.title`, `Box ${n} title`], [`eng.stat${n}.sub`, `Box ${n} small text`]])),
       el("section", { class: "card" }, el("h2", { text: "Projects" }),
-        el("p", { class: "sub", text: "Order here is the order on the site (featured ones show first). Results are hidden until you fill them — use real numbers." }),
+        el("p", { class: "sub", text: "Order here is the order on the site (featured ones show first). Results stay hidden until you fill them in. Use real numbers." }),
         listEditor("PROJECTS", () => D.PROJECTS, [
           { key: "title", label: "Title", full: true }, { key: "type", label: "Type", type: "select", options: TYPES },
           { key: "when", label: "When" }, { key: "org", label: "Organisation / where", full: true },
@@ -369,7 +369,7 @@
       return [
         textCard("Email gate", "What visitors see before they enter.", [["ike.gateText", "Gate text", "long"], ["ike.gateTitle", "Form title"], ["ike.gateFine", "Small print", "wide"]]),
         el("section", { class: "card" }, el("h2", { text: "Top video reel" }),
-          el("p", { class: "sub", text: "Silent clips that loop behind “Art. Ink. Life.” with an ink-splatter transition between each. Short clips (3–8 s) work best. Sound is never played." }),
+          el("p", { class: "sub", text: "Silent clips that loop behind “Art. Ink. Life.” with an ink-splatter transition between each. Short clips (3 to 8 s) work best. Sound is never played." }),
           listEditor("IKE", () => (I.reel = I.reel || []), [
             { key: "video", label: "Video", type: "video", folder: "images/ike" },
             { key: "poster", label: "Poster (first frame)", type: "image", folder: "images/ike" }
@@ -377,12 +377,12 @@
         el("section", { class: "card" }, el("h2", { text: "Intro" }),
           el("div", { class: "grid2" }, textField("Intro paragraph (after unlocking)", () => I.intro, v => { I.intro = v; touch("IKE"); }, { multi: true, full: true }))),
         el("section", { class: "card" }, el("h2", { text: "Tattoo pieces (Archive + Featured)" }),
-          el("p", { class: "sub", text: "Every piece here shows in the Archive grid. Tick Featured to also give it a big interactive deck at the top. Order here is the order on the page — put newest first." }),
+          el("p", { class: "sub", text: "Every piece here shows in the Archive grid. Tick Featured to also give it a big interactive deck at the top. Order here is the order on the page, so put newest first." }),
           listEditor("IKE", () => I.pieces, [
             { key: "title", label: "Title" }, { key: "note", label: "Short note" },
-            { key: "placement", label: "Placement (e.g. Upper back)" }, { key: "style", label: "Style (e.g. Fine line) — used for Archive filters" },
+            { key: "placement", label: "Placement (e.g. Upper back)" }, { key: "style", label: "Style (e.g. Fine line), used for the Archive filters" },
             { key: "date", label: "Date (e.g. Aug 2026)" },
-            { key: "featured", label: "Featured — big interactive deck at the top (it's always in the Archive)", type: "bool" },
+            { key: "featured", label: "Featured: big interactive deck at the top (it's always in the Archive)", type: "bool" },
             { key: "cover", label: "Cover photo", type: "image", folder: "images/ike" },
             { key: "shots", label: "Photos & videos", type: "list",
               hint: "Photo: upload under Photo and set the tattoo position. Video: upload under Video (MP4, keep it under ~25 MB) plus a Poster photo for the thumbnail.",
@@ -391,7 +391,7 @@
                 { key: "video", label: "Video (instead of a photo)", type: "video", folder: "images/ike" },
                 { key: "poster", label: "Video poster / thumbnail", type: "image", folder: "images/ike" },
                 { key: "caption", label: "Caption" },
-                { key: "focus", label: "Tattoo position (photos)", type: "focus", hint: "x %, y %, zoom — e.g. “50, 74, 2” = centre, 74% down, 2× zoom. Empty = centre." }
+                { key: "focus", label: "Tattoo position (photos)", type: "focus", hint: "x %, y %, zoom. E.g. “50, 74, 2” = centre, 74% down, 2× zoom. Empty = centre." }
               ],
               opts: { title: x => x.caption || (x.video ? "Video" : "Photo"), sub: x => (x.video ? "video" : "photo"), img: x => x.img || x.poster, blank: { img: "", caption: "" }, addLabel: "Add photo or video" } }
           ], { title: p => p.title, sub: p => [p.featured ? "★ featured" : "", p.style, `${(p.shots || []).length} item${(p.shots || []).length === 1 ? "" : "s"}`].filter(Boolean).join(" · "), img: p => p.cover,
@@ -430,15 +430,15 @@
             textField("Email (shown on the site)", () => C.email, set("email"), { type: "email" }),
             textField("Location", () => C.location, set("location")),
             textField("LinkedIn URL", () => C.linkedin, set("linkedin"), { type: "url", placeholder: "https://linkedin.com/in/…", hint: "Empty hides the button." }),
-            textField("Instagram — Hove Huru", () => C.instagram.hovehuru, v => { C.instagram.hovehuru = v.replace(/^@/, ""); touch("SITE_CONFIG"); }, { placeholder: "handle, no @" }),
-            textField("Instagram — Ike", () => C.instagram.ike, v => { C.instagram.ike = v.replace(/^@/, ""); touch("SITE_CONFIG"); }, { placeholder: "handle, no @" }),
+            textField("Instagram: Hove Huru", () => C.instagram.hovehuru, v => { C.instagram.hovehuru = v.replace(/^@/, ""); touch("SITE_CONFIG"); }, { placeholder: "handle, no @" }),
+            textField("Instagram: Ike", () => C.instagram.ike, v => { C.instagram.ike = v.replace(/^@/, ""); touch("SITE_CONFIG"); }, { placeholder: "handle, no @" }),
             imageField("Resume (PDF)", "assets", () => C.resumePdf, set("resumePdf"), { raw: true, accept: "application/pdf", prefix: "" }))),
         el("section", { class: "card" }, el("h2", { text: "Email capture" }),
           el("p", { class: "sub", text: "Paste your Formspree form endpoint so the Ike gate and shop inquiries reach your inbox." }),
           el("div", { class: "grid2" },
             textField("Form endpoint", () => C.formEndpoint, set("formEndpoint"), { full: true, type: "url", placeholder: "https://formspree.io/f/…" }))),
         el("section", { class: "card" }, el("h2", { text: "Admin button" }),
-          el("p", { class: "sub", text: "The small “Admin” link in every page footer. Turn it off once the site is finished — this page stays at /admin/." }),
+          el("p", { class: "sub", text: "The small “Admin” link in every page footer. Turn it off once the site is finished. This page stays at /admin/." }),
           boolField("Show the Admin link in footers", () => C.showAdminLink !== false, v => { C.showAdminLink = v; touch("SITE_CONFIG"); }))
       ];
     }}
@@ -480,7 +480,7 @@
   // ---------------------------------------------------------------- token
   function setConn() {
     const s = $("#connState");
-    s.textContent = token ? "Connected to GitHub" : "Not connected — can't publish";
+    s.textContent = token ? "Connected to GitHub" : "Not connected, can't publish";
     s.classList.toggle("on", !!token);
   }
   function openToken() { $("#tokenInput").value = ""; $("#tokenMsg").textContent = token ? "A key is saved on this device." : ""; $("#tokenMsg").className = "small"; $("#tokenDlg").showModal(); }
@@ -533,11 +533,11 @@
         dirty.delete(f.path); tick("Saved");
       }
       safeSet(DRAFT_KEY, null); dirtyTabs.clear();
-      showNotice("Published. The live site updates in about a minute — refresh it then.", [["Open site", () => open(TABS.find(t => t.id === current).page, "_blank")]], "ok");
+      showNotice("Published. The live site updates in about a minute. Refresh it then.", [["Open site", () => open(TABS.find(t => t.id === current).page, "_blank")]], "ok");
       toast("Published ✓");
       refresh();
     } catch (e) {
-      toast(e.status === 401 || e.status === 403 ? "GitHub refused the save — your key may have expired. Reconnect it." : "Publish failed: " + e.message, 6000);
+      toast(e.status === 401 || e.status === 403 ? "GitHub refused the save. Your key may have expired, so reconnect it." : "Publish failed: " + e.message, 6000);
       if (e.status === 401) openToken();
     } finally {
       btn.disabled = false; $("#discard").disabled = false; btn.textContent = "Publish"; updateSavebar();

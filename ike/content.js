@@ -1,15 +1,15 @@
 /*
-  IKE CONTENT — shown only after a visitor enters their email.
+  IKE CONTENT: shown only after a visitor enters their email.
 
-  art         – artwork pieces: { title, medium, year, img }
-  tattoos     – your tattoo journey, oldest first: { when, title, story, img }
-  photography – lifestyle / street / portrait work: { title, place, img }
+  art         - artwork pieces: { title, medium, year, img }
+  tattoos     - your tattoo journey, oldest first: { when, title, story, img }
+  photography - lifestyle / street / portrait work: { title, place, img }
 
   img paths: put photos in /images/ike/ and write e.g. "../images/ike/flash-01.jpg".
   "" shows a placeholder.
 */
 window.IKE = {
-  intro: "Ike is where the work stops being polite. Paintings, flash, the tattoos — mine and the ones I've put on other people — and photographs of the life around them.",
+  intro: "Ike is where the work stops being polite. Paintings, flash, the tattoos on me and the ones I've put on other people, and photographs of the life around them.",
 
   // Silent reel that loops behind "Art. Ink. Life." at the top of the vault (ink-splatter transitions).
   reel: [
@@ -28,7 +28,7 @@ window.IKE = {
   {
     title: "Luna Moth",
     featured: true, placement: "Upper back", style: "Fine line", date: "2026",
-    note: "Fine line, between the shoulder blades — and what she thought of it.",
+    note: "Fine line, between the shoulder blades. Plus what she thought of it.",
     cover: "../images/ike/luna-moth-01.jpg",
     shots: [
       { img: "../images/ike/luna-moth-01.jpg", caption: "Luna Moth", focus: { x: 32, y: 71, zoom: 1.6, w: 0.34, h: 0.58 } },
@@ -72,7 +72,7 @@ window.IKE = {
   ],
 
   tattoos: [
-    { when: "The first one", title: "Where it started", story: "Write the story of your first tattoo — getting it or giving it. What made you pick up the machine?", img: "" },
+    { when: "The first one", title: "Where it started", story: "Write the story of your first tattoo, getting it or giving it. What made you pick up the machine?", img: "" },
     { when: "Learning", title: "Practice skin & first clients", story: "The early work: what you got wrong, what you learned, who trusted you first.", img: "" },
     { when: "Finding a style", title: "The line that became mine", story: "When your work started looking like you. Show the piece where it clicked.", img: "" },
     { when: "Now", title: "Ike Ink", story: "What you tattoo today, how to book, and where it's going next.", img: "" }

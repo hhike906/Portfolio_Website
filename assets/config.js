@@ -1,5 +1,5 @@
 /*
-  SITE CONFIG — the only file you need to touch for links and contact settings.
+  SITE CONFIG: the only file you need to touch for links and contact settings.
   Edit on GitHub: open this file, tap the pencil, change the value, commit.
 */
 window.SITE_CONFIG = {
@@ -21,7 +21,7 @@ window.SITE_CONFIG = {
   },
 
   /*
-    FORM ENDPOINT — captures emails from the Ike gate and inquiries from the shop.
+    FORM ENDPOINT: captures emails from the Ike gate and inquiries from the shop.
     1. Make a free account at https://formspree.io
     2. Create a form, copy its endpoint (looks like https://formspree.io/f/abcdwxyz)
     3. Paste it below.

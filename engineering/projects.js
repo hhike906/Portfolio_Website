@@ -1,25 +1,25 @@
 /*
-  ENGINEERING PROJECTS — edit this list to add, remove or update projects.
+  ENGINEERING PROJECTS: edit this list to add, remove or update projects.
 
   Each project:
-    title     – short name
-    type      – "Work", "Class", "Senior Design" or "Fabrication" (drives the filter buttons)
-    org       – where it happened
-    when      – date or term
-    summary   – one sentence shown on the card
-    problem   – what needed solving
-    approach  – what YOU did (methods, tools)
-    result    – measurable outcome. LEAVE "" UNTIL YOU HAVE A REAL NUMBER — empty results are hidden.
-    skills    – list of tags
-    img       – path to a photo, e.g. "../images/eng/bosch-line5.jpg". "" shows a placeholder.
-    featured  – true puts it in the top row
+    title     - short name
+    type      - "Work", "Class", "Senior Design" or "Fabrication" (drives the filter buttons)
+    org       - where it happened
+    when      - date or term
+    summary   - one sentence shown on the card
+    problem   - what needed solving
+    approach  - what YOU did (methods, tools)
+    result    - measurable outcome. LEAVE "" UNTIL YOU HAVE A REAL NUMBER. Empty results are hidden.
+    skills    - list of tags
+    img       - path to a photo, e.g. "../images/eng/bosch-line5.jpg". "" shows a placeholder.
+    featured  - true puts it in the top row
 
-  Rule: every result should be a number a hiring manager can repeat —
+  Rule: every result should be a number a hiring manager can repeat:
   minutes saved, % defects cut, queue shortened, cost avoided.
 */
 window.PROJECTS = [
   {
-    title: "Line 5 Insulation Gluing — Process Improvement",
+    title: "Line 5 Insulation Gluing Improvement",
     type: "Senior Design",
     org: "Bosch Home Comfort · ACE Consulting team",
     when: "Fall 2026 · in progress",
@@ -47,8 +47,8 @@ window.PROJECTS = [
   {
     title: "Composites Layup & Research",
     type: "Work",
-    org: "NIAR — National Institute for Aviation Research",
-    when: "Oct 2022 – present",
+    org: "NIAR (National Institute for Aviation Research)",
+    when: "Since Oct 2022",
     summary: "Composite layup and research support for aerospace work at one of the largest university aviation research institutes in the US.",
     problem: "Research programs need composite parts laid up to specification, consistently and with documented process control.",
     approach: "Perform composite layups and support research testing, following aerospace quality and documentation standards.",

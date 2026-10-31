@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hove Huru — The House</title>
-<meta name="description" content="Hove Huru — a Zimbabwe-rooted luxury house. Hand-braided copper bracelets, furniture and metalwork.">
+<title>Hove Huru | The House</title>
+<meta name="description" content="Hove Huru, a Zimbabwe-rooted luxury house. Hand-braided copper bracelets, furniture and metalwork.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/base.css?v=20261031180018">
+<link rel="stylesheet" href="../assets/base.css?v=20261031181204">
 <script>try{if(sessionStorage.getItem("arrive-from-portal")){sessionStorage.removeItem("arrive-from-portal");document.documentElement.classList.add("from-portal");}}catch(e){}</script>
 <style>
   :root {
@@ -135,14 +135,14 @@
   </header>
 
   <main>
-    <section class="hero" aria-label="Hove Huru — the Ninth Fin copper bracelet">
+    <section class="hero" aria-label="Hove Huru: the Ninth Fin copper bracelet">
       <canvas id="bracelet" aria-label="Interactive 3D copper bracelet. Drag to rotate." role="img"></canvas>
       <div class="top">
         <p data-t="hh.eyebrow" class="eyebrow" data-reveal>A Zimbabwe-rooted luxury house</p>
         <h1 data-split>Hove Huru</h1>
       </div>
       <div class="bottom">
-        <blockquote data-t="hh.quote" data-reveal style="--d:500ms">Not a brand. A house — of six orders, of objects made to be inherited.</blockquote>
+        <blockquote data-t="hh.quote" data-reveal style="--d:500ms">Not a brand. A house of six orders, and of objects made to be inherited.</blockquote>
         <a class="btn" href="#shop" data-magnetic data-reveal style="--d:700ms">Enter the shop</a>
         <div><span class="drag-hint" data-reveal style="--d:900ms">Drag to turn the bracelet</span></div>
       </div>
@@ -186,7 +186,7 @@
         <div data-reveal="right">
           <p class="eyebrow">The workshop</p>
           <h2 data-t="hh.craftTitle" style="font-size:clamp(2rem,4vw,2.8rem);font-weight:500">Made by one pair of hands.</h2>
-          <p data-t="hh.craftP1">Every Hove Huru piece is cut, braided, welded and finished by the founder in Wichita, Kansas — an industrial engineer and fabricator by training.</p>
+          <p data-t="hh.craftP1">Every Hove Huru piece is cut, braided, welded and finished in Wichita, Kansas by the founder, an industrial engineer and fabricator by training.</p>
           <p data-t="hh.craftP2">We make few things, slowly, so each one can outlast its owner.</p>
           <a class="btn ghost" href="#" data-inquire="Custom commission">Commission a piece</a>
           <p style="margin-top:20px"><a data-ig="hovehuru" href="#" target="_blank" rel="noopener"></a></p>
@@ -220,12 +220,12 @@
   </dialog>
 
 <script data-live="../assets/config.js">document.write('<script src="../assets/config.js?t='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
-<script src="../assets/site.js?v=20261031180018"></script>
+<script src="../assets/site.js?v=20261031181204"></script>
 <script data-live="../data/text.js">document.write('<script src="../data/text.js?t='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
-<script src="../assets/bind.js?v=20261031180018"></script>
+<script src="../assets/bind.js?v=20261031181204"></script>
 <script data-live="products.js">document.write('<script src="products.js?t='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
-<script src="../assets/motion.js?v=20261031180018"></script>
-<script type="module" src="../assets/bracelet.js?v=20261031180018"></script>
+<script src="../assets/motion.js?v=20261031181204"></script>
+<script type="module" src="../assets/bracelet.js?v=20261031181204"></script>
 <script>
   (function () {
     const products = window.PRODUCTS || [];
@@ -297,7 +297,7 @@
       e.preventDefault();
       form.reset(); status.textContent = "";
       form.elements.namedItem("product").value = t.dataset.inquire;
-      document.getElementById("inqTitle").textContent = (t.dataset.waitlist ? "Waitlist — " : "") + t.dataset.inquire;
+      document.getElementById("inqTitle").textContent = (t.dataset.waitlist ? "Waitlist: " : "") + t.dataset.inquire;
       if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
     });
     document.getElementById("inqClose").addEventListener("click", () => dlg.close());
@@ -311,7 +311,7 @@
       // Fallback: open the visitor's email app with the inquiry prefilled
       const cfg = window.SITE_CONFIG || {};
       const body = `Name: ${data.name}%0D%0AEmail: ${data.email}%0D%0A%0D%0A${encodeURIComponent(data.message || "")}`;
-      location.href = `mailto:${cfg.email}?subject=${encodeURIComponent("Hove Huru inquiry — " + data.product)}&body=${body}`;
+      location.href = `mailto:${cfg.email}?subject=${encodeURIComponent("Hove Huru inquiry: " + data.product)}&body=${body}`;
       status.textContent = "Opening your email app to send this…";
     });
   })();

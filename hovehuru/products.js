@@ -1,16 +1,16 @@
 /*
-  HOVE HURU PRODUCTS — edit this list to manage the shop.
+  HOVE HURU PRODUCTS: edit this list to manage the shop.
 
   Each product:
-    name        – product name
-    category    – "Bracelets", "Rings", "Furniture", "Metalwork" or "Textiles" (drives the filter)
-    clan        – one of the six orders, or ""
-    price       – number in USD, e.g. 120. Use null to show "Price on request".
-    status      – "available", "made-to-order", "coming-soon" or "sold-out"
-    edition     – e.g. "Edition of 25" or ""
-    description – 1–2 sentences
-    img         – photo path, e.g. "../images/hh/ninth-fin-bracelet.jpg". "" shows a placeholder.
-    buyLink     – Stripe Payment Link (https://buy.stripe.com/...). When set and status is
+    name        - product name
+    category    - "Bracelets", "Rings", "Furniture", "Metalwork" or "Textiles" (drives the filter)
+    clan        - one of the six orders, or ""
+    price       - number in USD, e.g. 120. Use null to show "Price on request".
+    status      - "available", "made-to-order", "coming-soon" or "sold-out"
+    edition     - e.g. "Edition of 25" or ""
+    description - 1 or 2 sentences
+    img         - photo path, e.g. "../images/hh/ninth-fin-bracelet.jpg". "" shows a placeholder.
+    buyLink     - Stripe Payment Link (https://buy.stripe.com/...). When set and status is
                   "available", the button becomes BUY NOW and takes card payment.
                   When empty, the button opens an inquiry form instead.
 
@@ -27,7 +27,7 @@ window.PRODUCTS = [
     price: null,
     status: "available",
     edition: "First edition",
-    description: "The house's first piece. Hand-braided copper for the strategists and financiers — those who move unseen.",
+    description: "The house's first piece. Hand-braided copper for the strategists and financiers, those who move unseen.",
     img: "",
     buyLink: "",
     featured: true
@@ -39,7 +39,7 @@ window.PRODUCTS = [
     price: null,
     status: "made-to-order",
     edition: "",
-    description: "Copper wire braided by hand in the workshop and finished to your wrist size. Each one carries small variations — that is the point.",
+    description: "Copper wire braided by hand in the workshop and finished to your wrist size. Each one carries small variations. That is the point.",
     img: "",
     buyLink: ""
   },
@@ -61,7 +61,7 @@ window.PRODUCTS = [
     price: null,
     status: "made-to-order",
     edition: "Commissioned",
-    description: "A hand-fabricated steel fire pit built as a gathering place — the centre of a home's ritual life.",
+    description: "A hand-fabricated steel fire pit built as a gathering place, the centre of a home's ritual life.",
     img: "",
     buyLink: ""
   },
@@ -83,7 +83,7 @@ window.PRODUCTS = [
     price: null,
     status: "made-to-order",
     edition: "",
-    description: "Signs, frames, sculpture and functional pieces in steel — designed with you, fabricated by hand.",
+    description: "Signs, frames, sculpture and functional pieces in steel, designed with you and fabricated by hand.",
     img: "",
     buyLink: ""
   },
