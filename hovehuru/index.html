@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/base.css">
+<script>try{if(sessionStorage.getItem("arrive-from-portal")){sessionStorage.removeItem("arrive-from-portal");document.documentElement.classList.add("from-portal");}}catch(e){}</script>
 <style>
   :root {
     --bg: #0a0806; --fg: #ece2d0; --muted: #9a8c78;
@@ -37,6 +38,9 @@
   .drag-hint { display: inline-flex; gap: 10px; align-items: center; font-size: .68rem; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); margin-top: 12px; }
   .drag-hint::before, .drag-hint::after { content: ""; width: 28px; height: 1px; background: var(--line-strong); }
   .scroll-cue { position: absolute; left: 50%; bottom: 14px; width: 1px; height: 38px; background: linear-gradient(var(--copper), transparent); transform-origin: top; animation: cue 2.2s ease-in-out infinite; }
+  /* Arriving through the copper portal from the home page: start in darkness, then the hero rises out of it */
+  .from-portal body::after { content: ""; position: fixed; inset: 0; z-index: 999; pointer-events: none; background: #0a0806; animation: portalOut 1.2s ease .15s forwards; }
+  @keyframes portalOut { to { opacity: 0; visibility: hidden; } }
   @keyframes cue { 0%,100% { transform: scaleY(.3); opacity: .3 } 50% { transform: scaleY(1); opacity: 1 } }
 
   /* Motion details */
